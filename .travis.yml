@@ -1,0 +1,17 @@
+language: php
+php:
+  - '7.4'
+service:
+  - mysql
+branches:
+  only:
+    - master
+cache:
+  directories:
+    - vendor
+before_script:
+  - composer install --dev --no-interaction
+  - composer run-script create-travis-env-config
+  - mysql -u root --default-character-set=utf8 interview_20201209 < resources/db/schema/interview_20201209.sql
+script:
+  - vendor/bin/phpunit

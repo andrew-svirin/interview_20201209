@@ -1,0 +1,3 @@
+<?php
+
+// Enterpoint for application.

@@ -1,0 +1,44 @@
+{
+  "name": "andrew-svirin/interview_20201209",
+  "description": "Interview code. Demonstrates developer skills on proposed simple task.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrew Svirin"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "ext-mysqli": "*"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^0.12.29",
+    "phpunit/phpunit": "^8.5|^9",
+    "squizlabs/php_codesniffer": "^3.3",
+    "vlucas/phpdotenv": "^5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "AndrewSvirin\\Interview\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AndrewSvirin\\Interview\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-root-package-install": [
+      "@create-env-config"
+    ],
+    "create-env-config": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "create-travis-env-config": [
+      "@php -r \"file_exists('.env') || copy('.env.travis', '.env');\""
+    ],
+    "create-phpunit-config": [
+      "@php -r \"file_exists('phpunit.xml') || copy('phpunit.xml.dist', 'phpunit.xml');\""
+    ]
+  }
+}
