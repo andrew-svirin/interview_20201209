@@ -1,7 +1,9 @@
+os: linux
+dist: xenial
 language: php
 php:
   - '7.4'
-service:
+services:
   - mysql
 branches:
   only:
