@@ -2,17 +2,18 @@
 
 namespace AndrewSvirin\Interview\Tests;
 
+use AndrewSvirin\Interview\Services\Container;
+use AndrewSvirin\Interview\Services\ServiceRegistry;
 use Dotenv\Dotenv;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 abstract class BaseTestCase extends TestCase
 {
     /**
-     * Configuration array.
-     * @var array
+     * Application container.
      */
-    protected $config;
+    protected ContainerInterface $container;
 
     /**
      * Setup environment.
@@ -26,11 +27,13 @@ abstract class BaseTestCase extends TestCase
     }
 
     /**
-     * Setup config.
+     * Setup container.
      */
-    private function setUpConfig(): void
+    private function setUpContainer(): void
     {
-        $this->config = include(BASE_DIR . '/resources/config/config.php');
+        $registry = new ServiceRegistry();
+        $container = new Container($registry);
+        $this->container = $container;
     }
 
     /**
@@ -41,6 +44,6 @@ abstract class BaseTestCase extends TestCase
     {
         parent::setUp();
         $this->setUpEnvironment();
-        $this->setUpConfig();
+        $this->setUpContainer();
     }
 }

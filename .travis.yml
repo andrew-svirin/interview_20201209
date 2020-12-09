@@ -14,7 +14,10 @@ cache:
 before_script:
   - composer install --dev --no-interaction
   - composer run-script create-travis-env-config
+  - composer run-script create-phpunit-config
   - mysql -u root -e 'CREATE DATABASE IF NOT EXISTS `interview_20201209` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; USE `interview_20201209`;'
   - mysql -u root --default-character-set=utf8 interview_20201209 < resources/db/schema/interview_20201209.sql
 script:
   - vendor/bin/phpunit
+  - vendor/bin/phpstan analyze
+  - vendor/bin/phpcs
