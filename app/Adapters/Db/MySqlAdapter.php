@@ -44,7 +44,23 @@ class MySqlAdapter implements DbAdapterInterface
         array $params = null,
         $outputFormat = self::OUTPUT_FETCH_ALL_ASSOC
     ) {
-        $queryResult = mysqli_query($connection, $query); // @phpstan-ignore-line
+        // Create query statement.
+        $stmt = mysqli_prepare($connection, $query);
+
+        // TODO: recognize params types correctly.
+        // Bind parameters
+        $types = str_repeat('s', count($params));
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+
+        // Execute query.
+        mysqli_stmt_execute($stmt);
+
+        // Get query result.
+        $queryResult = mysqli_stmt_get_result($stmt);
+
+        // Close statement.
+        mysqli_stmt_close($stmt);
+
         if (!$queryResult) {
             throw new RuntimeException(mysqli_error($connection)); // @phpstan-ignore-line
         }
@@ -64,7 +80,7 @@ class MySqlAdapter implements DbAdapterInterface
     {
         switch ($format) {
             case self::OUTPUT_FETCH_ALL_ASSOC:
-                $outputResult = mysqli_fetch_assoc($queryResult);  // @phpstan-ignore-line
+                $outputResult = mysqli_fetch_all($queryResult, MYSQLI_ASSOC);  // @phpstan-ignore-line
                 break;
             default:
                 throw new InvalidArgumentException(sprintf('Fetch format `%d` not supported.', $format));

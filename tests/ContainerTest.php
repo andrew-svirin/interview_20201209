@@ -6,6 +6,9 @@ use AndrewSvirin\Interview\Services\Config;
 use AndrewSvirin\Interview\Services\ServiceRegistry;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Tests for @see ContainerInterface
+ */
 class ContainerTest extends BaseTestCase
 {
 
