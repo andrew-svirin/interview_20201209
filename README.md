@@ -1,5 +1,6 @@
-# Airplane seats
 [![Build Status](https://travis-ci.org/andrew-svirin/ebics-client-php.svg?branch=master)](https://travis-ci.org/andrew-svirin/ebics-client-php)
+
+# Airplane seats
 Task is described here https://gist.github.com/lucasssa/e580a19783d4babebdeffcd397adcd96
 
 ## Environment
