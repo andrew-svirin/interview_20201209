@@ -2,6 +2,7 @@
 
 namespace AndrewSvirin\Interview\Adapters\Db;
 
+use AndrewSvirin\Interview\Exceptions\DbQueryInvalidException;
 use InvalidArgumentException;
 use mysqli;
 use mysqli_result;
@@ -12,7 +13,6 @@ class MySqlAdapter implements DbAdapterInterface
 
     /**
      * @inheritDoc
-     * @return resource|mysqli
      */
     public function connect(string $host, string $name, string $username, string $password, string $port)
     {
@@ -27,16 +27,23 @@ class MySqlAdapter implements DbAdapterInterface
 
     /**
      * @inheritDoc
-     * @param resource|mysqli $connection
      */
-    public function close($connection): bool
+    public function isConnection($connection): bool
     {
-        return mysqli_close($connection); // @phpstan-ignore-line
+        return $connection instanceof mysqli;
     }
 
     /**
      * @inheritDoc
-     * @param resource|mysqli $connection
+     */
+    public function close($connection): bool
+    {
+        return mysqli_close($connection);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws DbQueryInvalidException
      */
     public function query(
         $connection,
@@ -45,7 +52,9 @@ class MySqlAdapter implements DbAdapterInterface
         $outputFormat = self::OUTPUT_FETCH_ALL_ASSOC
     ) {
         // Create query statement.
-        $stmt = mysqli_prepare($connection, $query);
+        if (!($stmt = mysqli_prepare($connection, $query))) {
+            throw new DbQueryInvalidException();
+        }
 
         // TODO: recognize params types correctly.
         // Bind parameters
@@ -62,7 +71,7 @@ class MySqlAdapter implements DbAdapterInterface
         mysqli_stmt_close($stmt);
 
         if (!$queryResult) {
-            throw new RuntimeException(mysqli_error($connection)); // @phpstan-ignore-line
+            throw new RuntimeException(mysqli_error($connection));
         }
 
         $outputResult = $this->output($queryResult, $outputFormat);
@@ -72,8 +81,10 @@ class MySqlAdapter implements DbAdapterInterface
 
     /**
      * Format query result.
-     * @param resource|mysqli_result|bool $queryResult
+     *
+     * @param mysqli_result|bool $queryResult
      * @param int $format
+     *
      * @return array|mixed
      */
     private function output($queryResult, int $format)

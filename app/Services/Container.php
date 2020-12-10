@@ -7,6 +7,7 @@ use LogicException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionParameter;
 
 /**
  * Contains IoC services dependencies.
@@ -69,7 +70,9 @@ class Container implements ContainerInterface
 
     /**
      * Check that service class name is instantiable
+     *
      * @param string|array $service
+     *
      * @return bool
      */
     private function isServiceInstantiable($service)
@@ -91,9 +94,10 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Create new instance
+     * Create new instance by registry.
      *
      * @param string $id The service id in container.
+     *
      * @return array
      * @throws ServiceInvalidException
      */
@@ -110,10 +114,8 @@ class Container implements ContainerInterface
             } catch (ReflectionException $exception) {
                 throw new ServiceInvalidException();
             }
-            if (($constructor = $class->getConstructor())) {
-                $arguments = $this->resolveClassArguments($constructor->getParameters());
-            }
-            $entry = $class->newInstanceArgs($arguments ?? []);
+
+            $entry = $this->resolveEntry($class);
         } else {
             // TODO: Add more options for pass specific arguments to constructor.
             throw new LogicException(sprintf('Incorrect registry service %s.', serialize($service)));
@@ -126,14 +128,47 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Resolve entry from reflection class.
+     *
+     * @param ReflectionClass $class
+     *
+     * @return object
+     * @throws ServiceInvalidException
+     */
+    private function resolveEntry(ReflectionClass $class)
+    {
+        if (($constructor = $class->getConstructor())) {
+            $arguments = $this->resolveClassArguments($constructor->getParameters());
+        }
+
+        return $class->newInstanceArgs($arguments ?? []);
+    }
+
+    /**
      * Resolve arguments from constructor parameters.
      *
-     * @param array $parameters
+     * @param ReflectionParameter[] $parameters
+     *
      * @return array
+     * @throws ServiceInvalidException
      */
     private function resolveClassArguments(array $parameters): array
     {
-        // TODO: Resolve arguments.
-        return [];
+        $entries = [];
+
+        // Go over constructor parameters.
+        foreach ($parameters as $parameter) {
+            // Get service id from parameter class.
+            $id = $parameter->getClass()->getName();
+
+            if (!isset($this->instantiated[$id])) {
+                // Resolve entry and put to arguments.
+                $this->instantiated[$id] = $this->resolveInstance($id);
+            }
+
+            $entries[] = $this->instantiated[$id]['entry'];
+        }
+
+        return $entries;
     }
 }

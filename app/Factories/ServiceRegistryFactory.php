@@ -14,6 +14,7 @@ class ServiceRegistryFactory
      * Produce service registry from array.
      *
      * @param array $services
+     *
      * @return ServiceRegistry
      */
     public static function produceFromArray(array $services): ServiceRegistry

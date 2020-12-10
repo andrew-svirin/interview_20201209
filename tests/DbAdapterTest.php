@@ -10,11 +10,11 @@ use AndrewSvirin\Interview\Services\Config;
  *
  * @group db-adapter
  */
-class DBAdapterTest extends BaseTestCase
+class DbAdapterTest extends BaseTestCase
 {
 
     /**
-     * Create connection and check it.
+     * CHeck db adapter is instantiated.
      */
     public function testAdapter()
     {
@@ -87,10 +87,6 @@ class DBAdapterTest extends BaseTestCase
 
         $dbAdapter->close($connection);
 
-        $this->assertEquals([
-            [
-                'RES' => '100',
-            ],
-        ], $result);
+        $this->assertEquals([['RES' => '100']], $result);
     }
 }

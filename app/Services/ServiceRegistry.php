@@ -19,6 +19,7 @@ class ServiceRegistry
      * Get service by alias or by class name.
      *
      * @param string $id Service id in registry.
+     *
      * @return string Service class name.
      * @throws ServiceNotFoundException
      */

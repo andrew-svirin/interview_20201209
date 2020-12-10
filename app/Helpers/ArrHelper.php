@@ -14,6 +14,7 @@ class ArrHelper
      * @param array $array
      * @param string|null $key
      * @param mixed $default
+     *
      * @return mixed
      */
     public static function get(array $array, string $key = null, $default = null)

@@ -25,6 +25,7 @@ class Config
      * Get config data by path.
      *
      * @param string $key The path to config data in "dot" syntax.
+     *
      * @return mixed
      */
     public function get(string $key)

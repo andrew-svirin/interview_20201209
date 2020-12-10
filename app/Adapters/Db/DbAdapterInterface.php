@@ -16,29 +16,43 @@ interface DbAdapterInterface
 
     /**
      * Establish connection to database.
+     *
      * @param string $host
      * @param string $name
      * @param string $username
      * @param string $password
      * @param string $port
      *
-     * @return resource
+     * @return mixed
      */
     public function connect(string $host, string $name, string $username, string $password, string $port);
 
     /**
+     * Check that connection is established.
+     *
+     * @param mixed $connection
+     *
+     * @return bool
+     */
+    public function isConnection($connection): bool;
+
+    /**
      * Close connection.
-     * @param resource $connection
+     *
+     * @param mixed $connection
+     *
      * @return bool
      */
     public function close($connection): bool;
 
     /**
      * Perform query.
-     * @param resource $connection
+     *
+     * @param mixed $connection
      * @param string $query
      * @param array|null $params
      * @param int $outputFormat
+     *
      * @return array|mixed
      */
     public function query(

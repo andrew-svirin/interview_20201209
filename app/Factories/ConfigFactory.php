@@ -16,6 +16,7 @@ class ConfigFactory
      * Produce config from a file.
      *
      * @param string|null $path
+     *
      * @return Config
      * @throws FileNotFoundException
      */
@@ -45,6 +46,7 @@ class ConfigFactory
      * Produce config from an array.
      *
      * @param array $config
+     *
      * @return Config
      */
     public static function produceFromArray(array $config): Config

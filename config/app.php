@@ -4,6 +4,7 @@
 
 use AndrewSvirin\Interview\Adapters\Db\DbAdapterInterface;
 use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
+use AndrewSvirin\Interview\Services\DbClient;
 
 $config = [
     'database' => [
@@ -17,6 +18,7 @@ $config = [
 
     'services' => [
         DbAdapterInterface::class => MySqlAdapter::class,
+        DbClient::class,
     ],
 ];
 
