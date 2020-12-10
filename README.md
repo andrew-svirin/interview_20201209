@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/andrew-svirin/ebics-client-php.svg?branch=master)](https://travis-ci.org/andrew-svirin/ebics-client-php)
+[![Build Status](https://travis-ci.org/andrew-svirin/interview_20201209.svg?branch=master)](https://travis-ci.org/andrew-svirin/interview_20201209)
 
 # Airplane seats
 Task is described here https://gist.github.com/lucasssa/e580a19783d4babebdeffcd397adcd96
