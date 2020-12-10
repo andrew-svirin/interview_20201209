@@ -4,3 +4,5 @@ parameters:
 	level: 7
 	paths:
 		- app
+	bootstrapFiles:
+		- bootstrap/app.php

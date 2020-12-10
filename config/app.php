@@ -2,6 +2,9 @@
 
 // Configurations for the application.
 
+use AndrewSvirin\Interview\Adapters\Db\DbAdapterInterface;
+use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
+
 $config = [
     'database' => [
         'driver' => 'mysql',
@@ -10,6 +13,10 @@ $config = [
         'username' => getenv('DB_USERNAME'),
         'password' => getenv('DB_PASSWORD'),
         'port' => 3306,
+    ],
+
+    'services' => [
+        DbAdapterInterface::class => MySqlAdapter::class,
     ],
 ];
 

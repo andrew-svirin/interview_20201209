@@ -2,9 +2,9 @@
 
 namespace AndrewSvirin\Interview\Tests;
 
+use AndrewSvirin\Interview\Factories\ConfigFactory;
+use AndrewSvirin\Interview\Factories\ServiceRegistryFactory;
 use AndrewSvirin\Interview\Services\Container;
-use AndrewSvirin\Interview\Services\ServiceRegistry;
-use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -16,24 +16,13 @@ abstract class BaseTestCase extends TestCase
     protected ContainerInterface $container;
 
     /**
-     * Setup environment.
-     */
-    private function setUpEnvironment(): void
-    {
-        // Create in unsafe mode to access by function `getenv`.
-        $dotenv = Dotenv::createUnsafeImmutable(BASE_DIR);
-        $dotenv->load();
-        $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USERNAME', 'DB_PASSWORD']);
-    }
-
-    /**
      * Setup container.
      */
     private function setUpContainer(): void
     {
-        $registry = new ServiceRegistry();
-        $container = new Container($registry);
-        $this->container = $container;
+        $config = ConfigFactory::produceFromFile();
+        $registry = ServiceRegistryFactory::produceFromArray($config->get('services'));
+        $this->container = new Container($config, $registry);
     }
 
     /**
@@ -43,7 +32,6 @@ abstract class BaseTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpEnvironment();
         $this->setUpContainer();
     }
 }
