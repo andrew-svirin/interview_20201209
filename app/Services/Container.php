@@ -30,6 +30,7 @@ class Container implements ContainerInterface
     {
         $this->instantiated[Config::class]['entry'] = $config;
         $this->instantiated[ServiceRegistry::class]['entry'] = $registry;
+        $this->instantiated[ContainerInterface::class]['entry'] = $this;
     }
 
     /**
@@ -132,7 +133,7 @@ class Container implements ContainerInterface
      *
      * @param ReflectionClass $class
      *
-     * @return object
+     * @return object Service instance.
      * @throws ServiceInvalidException
      */
     private function resolveEntry(ReflectionClass $class)

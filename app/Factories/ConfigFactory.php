@@ -20,7 +20,7 @@ class ConfigFactory
      * @return Config
      * @throws FileNotFoundException
      */
-    public static function produceFromFile(string $path = null): Config
+    public static function createFromFile(string $path = null): Config
     {
         // Set default config file path.
         if (null === $path) {
@@ -39,7 +39,7 @@ class ConfigFactory
         // Load config array from file.
         $config = include $path;
 
-        return self::produceFromArray($config);
+        return self::createFromArray($config);
     }
 
     /**
@@ -49,7 +49,7 @@ class ConfigFactory
      *
      * @return Config
      */
-    public static function produceFromArray(array $config): Config
+    public static function createFromArray(array $config): Config
     {
         return new Config($config);
     }

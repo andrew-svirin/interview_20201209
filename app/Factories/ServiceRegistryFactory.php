@@ -17,7 +17,7 @@ class ServiceRegistryFactory
      *
      * @return ServiceRegistry
      */
-    public static function produceFromArray(array $services): ServiceRegistry
+    public static function createFromArray(array $services): ServiceRegistry
     {
         $registry = new ServiceRegistry();
 

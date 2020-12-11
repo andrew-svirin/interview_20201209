@@ -36,4 +36,23 @@ class ArrHelper
 
         return $array;
     }
+
+    /**
+     * Return only filtered fields from array.
+     *
+     * @param array $array Array for filtering.
+     * @param array $fields Array of allowed fields.
+     *
+     * @return array
+     */
+    public static function filter(array $array, array $fields): array
+    {
+        return array_filter(
+            $array,
+            function ($key) use ($fields) {
+                return in_array($key, $fields);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+    }
 }

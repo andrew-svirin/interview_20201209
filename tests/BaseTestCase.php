@@ -20,8 +20,8 @@ abstract class BaseTestCase extends TestCase
      */
     private function setUpContainer(): void
     {
-        $config = ConfigFactory::produceFromFile();
-        $registry = ServiceRegistryFactory::produceFromArray($config->get('services'));
+        $config = ConfigFactory::createFromFile();
+        $registry = ServiceRegistryFactory::createFromArray($config->get('services'));
         $this->container = new Container($config, $registry);
     }
 
