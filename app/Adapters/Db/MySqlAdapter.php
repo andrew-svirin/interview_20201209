@@ -91,7 +91,7 @@ class MySqlAdapter implements DbAdapterInterface
     {
         switch ($format) {
             case self::OUTPUT_FETCH_ALL_ASSOC:
-                $outputResult = mysqli_fetch_all($queryResult, MYSQLI_ASSOC);  // @phpstan-ignore-line
+                $outputResult = mysqli_fetch_all($queryResult, MYSQLI_ASSOC); // @phpstan-ignore-line
                 break;
             default:
                 throw new InvalidArgumentException(sprintf('Fetch format `%d` not supported.', $format));

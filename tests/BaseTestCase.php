@@ -2,28 +2,15 @@
 
 namespace AndrewSvirin\Interview\Tests;
 
-use AndrewSvirin\Interview\Factories\ConfigFactory;
-use AndrewSvirin\Interview\Factories\ServiceRegistryFactory;
-use AndrewSvirin\Interview\Services\Container;
+use AndrewSvirin\Interview\Tests\Components\ApiTrait;
+use AndrewSvirin\Interview\Tests\Components\ContainerTrait;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 
 abstract class BaseTestCase extends TestCase
 {
-    /**
-     * Application container.
-     */
-    protected ContainerInterface $container;
 
-    /**
-     * Setup container.
-     */
-    private function setUpContainer(): void
-    {
-        $config = ConfigFactory::createFromFile();
-        $registry = ServiceRegistryFactory::createFromArray($config->get('services'));
-        $this->container = new Container($config, $registry);
-    }
+    use ContainerTrait;
+    use ApiTrait;
 
     /**
      * @inheritDoc

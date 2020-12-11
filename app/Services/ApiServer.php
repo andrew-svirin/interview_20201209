@@ -5,12 +5,16 @@ namespace AndrewSvirin\Interview\Services;
 use AndrewSvirin\Interview\Exceptions\ControllerActionArgumentIncorrectException;
 use AndrewSvirin\Interview\Exceptions\ControllerActionNotFoundException;
 use AndrewSvirin\Interview\Exceptions\RouteNotFoundException;
+use AndrewSvirin\Interview\Factories\ApiResponseFactory;
+use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactoryInterface;
 use AndrewSvirin\Interview\Requests\ApiRequest;
-use AndrewSvirin\Interview\Responses\Response;
+use AndrewSvirin\Interview\Responses\ApiResponse;
 use LogicException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -35,14 +39,53 @@ class ApiServer
     private Config $config;
 
     /**
+     * Response factory.
+     *
+     * @var ResponseFactoryInterface
+     */
+    private ResponseFactoryInterface $responseFactory;
+
+    /**
+     * Stream factory.
+     *
+     * @var StreamFactoryInterface
+     */
+    private StreamFactoryInterface $streamFactory;
+
+    /**
+     * Json Stream factory.
+     *
+     * @var JsonStreamFactoryInterface
+     */
+    private JsonStreamFactoryInterface $jsonStreamFactory;
+
+    /**
+     * ApiResponse Factory.
+     *
+     * @var ApiResponseFactory
+     */
+    private ApiResponseFactory $apiResponseFactory;
+    /**
+     * Container.
      * @var ContainerInterface
      */
     private ContainerInterface $container;
 
-    public function __construct(Router $router, Config $config, ContainerInterface $container)
-    {
+    public function __construct(
+        Router $router,
+        Config $config,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory,
+        JsonStreamFactoryInterface $jsonStreamFactory,
+        ApiResponseFactory $apiResponseFactory,
+        ContainerInterface $container
+    ) {
         $this->router = $router;
         $this->config = $config;
+        $this->responseFactory = $responseFactory;
+        $this->streamFactory = $streamFactory;
+        $this->jsonStreamFactory = $jsonStreamFactory;
+        $this->apiResponseFactory = $apiResponseFactory;
         $this->container = $container;
     }
 
@@ -137,9 +180,11 @@ class ApiServer
         /* @var $apiRequest ApiRequest */
         $apiRequest = $parameter->getClass()->newInstanceArgs([
             $request->getMethod(),
-            $request->getUri(),
-            $request->getBody()
+            $request->getUri()
         ]);
+        if (!empty($request->getBody())) {
+            $apiRequest->withBody($request->getBody()); // @phpstan-ignore-line
+        }
 
         return $apiRequest; // @phpstan-ignore-line
     }
@@ -153,6 +198,23 @@ class ApiServer
      */
     private function resolveResponse($apiResponse): ResponseInterface
     {
-        return new Response();
+        if ($apiResponse instanceof ApiResponse) {
+            $apiResponseInstance = $apiResponse;
+        } else {
+            $apiResponseInstance = $this->apiResponseFactory->createApiResponse(
+                200,
+                ''
+            );
+            $body = $this->jsonStreamFactory->createStreamFromJson($apiResponse);
+            $apiResponseInstance->withBody($body);
+        }
+
+        $response = $this->responseFactory->createResponse(
+            $apiResponseInstance->getStatusCode(),
+            $apiResponseInstance->getReasonPhrase()
+        );
+        $response->withBody($apiResponseInstance->getBody());
+
+        return $response;
     }
 }

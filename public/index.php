@@ -2,7 +2,12 @@
 
 // Enter point for application.
 
+use AndrewSvirin\Interview\App;
+
 $container = require_once __DIR__ . '/../bootstrap/app.php';
 
-// Get http client and run request.
-// $container->get('http_client');
+// Run application.
+/* @var $app App */
+$app = $container->get(App::class);
+
+$app->run();

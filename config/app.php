@@ -4,14 +4,24 @@
 
 use AndrewSvirin\Interview\Adapters\Db\DbAdapterInterface;
 use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
+use AndrewSvirin\Interview\App;
+use AndrewSvirin\Interview\Controllers\AirplaneController;
 use AndrewSvirin\Interview\Controllers\SiteController;
+use AndrewSvirin\Interview\Factories\ApiResponseFactory;
+use AndrewSvirin\Interview\Factories\Stream\InputStreamFactory;
+use AndrewSvirin\Interview\Factories\Stream\InputStreamFactoryInterface;
+use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactory;
+use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactoryInterface;
 use AndrewSvirin\Interview\Factories\RequestFactory;
+use AndrewSvirin\Interview\Factories\ResponseFactory;
+use AndrewSvirin\Interview\Factories\Stream\StreamFactory;
 use AndrewSvirin\Interview\Factories\UriFactory;
-use AndrewSvirin\Interview\Services\ApiClient;
 use AndrewSvirin\Interview\Services\ApiServer;
 use AndrewSvirin\Interview\Services\DbClient;
 use AndrewSvirin\Interview\Services\Router;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
 $config = [
@@ -29,14 +39,20 @@ $config = [
     // example: 'interfaceName' => 'className',
     // example: 'className', // is equal to 'className' => 'className'
     'services' => [
+        App::class,
         DbAdapterInterface::class => MySqlAdapter::class,
         DbClient::class,
         ApiServer::class,
-        ApiClient::class,
         UriFactoryInterface::class => UriFactory::class,
         RequestFactoryInterface::class => RequestFactory::class,
+        ResponseFactoryInterface::class => ResponseFactory::class,
+        StreamFactoryInterface::class => StreamFactory::class,
+        JsonStreamFactoryInterface::class => JsonStreamFactory::class,
+        InputStreamFactoryInterface::class => InputStreamFactory::class,
+        ApiResponseFactory::class,
         Router::class,
         SiteController::class,
+        AirplaneController::class,
     ],
 
     // Routes those accessible from router.
@@ -45,6 +61,9 @@ $config = [
     'routes' => [
         'api/version' => [
             'GET' => ['Site', 'version'],
+        ],
+        'api/airplanes' => [
+            'POST' => ['Airplane', 'create'],
         ],
     ],
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace AndrewSvirin\Interview\Requests;
+namespace AndrewSvirin\Interview\Http;
 
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
 /**
- * Common request model implementation.
+ * Http uri model implementation.
  */
 class Uri implements UriInterface
 {

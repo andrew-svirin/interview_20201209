@@ -2,7 +2,7 @@
 
 namespace AndrewSvirin\Interview\Factories;
 
-use AndrewSvirin\Interview\Requests\Request;
+use AndrewSvirin\Interview\Http\Request;
 use LogicException;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -29,10 +29,8 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @inheritDoc
-     *
-     * @param mixed|null $body
      */
-    public function createRequest(string $method, $uri, $body = null): RequestInterface
+    public function createRequest(string $method, $uri): RequestInterface
     {
         // Detect URI or by string or by instance.
         if (is_string($uri)) {
@@ -44,7 +42,7 @@ class RequestFactory implements RequestFactoryInterface
         }
 
         // Create request.
-        $request = new Request($method, $uriInstance, $body);
+        $request = new Request($method, $uriInstance);
 
         return $request;
     }

@@ -15,7 +15,10 @@ abstract class ApiRequest extends JsonRequest
      *
      * @return array
      */
-    abstract protected function rules(): array;
+    protected function rules()
+    {
+        return [];
+    }
 
     /**
      * Get validated json.

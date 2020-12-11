@@ -1,13 +1,13 @@
 <?php
 
-namespace AndrewSvirin\Interview\Responses;
+namespace AndrewSvirin\Interview\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 /**
- * Common response model implementation.
+ * Http response model implementation.
  */
 class Response implements ResponseInterface
 {
@@ -17,13 +17,26 @@ class Response implements ResponseInterface
      *
      * @var int
      */
-    private int $statusCode;
+    protected int $statusCode;
+
+    /**
+     * Reason phrase.
+     *
+     * @var string
+     */
+    protected string $reasonPhrase;
 
     /**
      * Body.
-     * @var mixed
+     * @var StreamInterface|null
      */
-    private $body;
+    protected ?StreamInterface $body = null;
+
+    public function __construct(int $code, string $reasonPhrase = '')
+    {
+        $this->statusCode = $code;
+        $this->reasonPhrase = $reasonPhrase;
+    }
 
     /**
      * @inheritDoc
@@ -38,7 +51,10 @@ class Response implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        throw new RuntimeException('Not implemented method withStatus().');
+        $this->statusCode = $code;
+        $this->reasonPhrase = $reasonPhrase;
+
+        return $this;
     }
 
     /**
@@ -46,7 +62,7 @@ class Response implements ResponseInterface
      */
     public function getReasonPhrase()
     {
-        throw new RuntimeException('Not implemented method getReasonPhrase().');
+        return $this->reasonPhrase;
     }
 
     /**
@@ -134,6 +150,8 @@ class Response implements ResponseInterface
      */
     public function withBody(StreamInterface $body)
     {
-        throw new RuntimeException('Not implemented method withBody().');
+        $this->body = $body;
+
+        return $this;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AndrewSvirin\Interview\Factories;
 
-use AndrewSvirin\Interview\Requests\Uri;
+use AndrewSvirin\Interview\Http\Uri;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AndrewSvirin\Interview\Requests;
+namespace AndrewSvirin\Interview\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -8,41 +8,42 @@ use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
 /**
- * Common request model implementation.
+ * Http request model implementation.
  */
 class Request implements RequestInterface
 {
 
     /**
      * Method.
+     *
      * @var string
      */
-    private string $method;
+    protected string $method;
 
     /**
      * URI of request.
+     *
      * @var UriInterface
      */
-    private UriInterface $uri;
+    protected UriInterface $uri;
 
     /**
      * Body.
-     * @var mixed|null
+     *
+     * @var StreamInterface|null
      */
-    private $body;
+    protected ?StreamInterface $body = null;
 
     /**
      * Request constructor.
      *
      * @param string $method
      * @param UriInterface $uri
-     * @param mixed|null $body
      */
-    public function __construct(string $method, UriInterface $uri, $body = null)
+    public function __construct(string $method, UriInterface $uri)
     {
         $this->method = $method;
         $this->uri = $uri;
-        $this->body = $body;
     }
 
     /**
@@ -127,7 +128,9 @@ class Request implements RequestInterface
      */
     public function withBody(StreamInterface $body)
     {
-        throw new RuntimeException('Not implemented method withBody().');
+        $this->body = $body;
+
+        return $this;
     }
 
     /**

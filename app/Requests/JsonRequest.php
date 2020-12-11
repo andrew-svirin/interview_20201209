@@ -2,6 +2,8 @@
 
 namespace AndrewSvirin\Interview\Requests;
 
+use AndrewSvirin\Interview\Http\Request;
+
 /**
  * Common JSON request implementation.
  */
@@ -15,7 +17,6 @@ class JsonRequest extends Request
      */
     public function getJson(): ?array
     {
-        $body = $this->getBody();
-        return !empty($body) ? json_decode($body, true) : null;
+        return !empty($this->body) ? json_decode($this->body, true) : null;
     }
 }
