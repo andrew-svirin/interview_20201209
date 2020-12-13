@@ -7,6 +7,7 @@ use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
 use AndrewSvirin\Interview\App;
 use AndrewSvirin\Interview\Controllers\AirplaneController;
 use AndrewSvirin\Interview\Controllers\SiteController;
+use AndrewSvirin\Interview\Facades\AirplaneFacade;
 use AndrewSvirin\Interview\Factories\Http\ApiRequestFactory;
 use AndrewSvirin\Interview\Factories\Http\ApiResponseFactory;
 use AndrewSvirin\Interview\Factories\Http\RequestFactory;
@@ -17,6 +18,9 @@ use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactory;
 use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactoryInterface;
 use AndrewSvirin\Interview\Factories\Http\Stream\StreamFactory;
 use AndrewSvirin\Interview\Factories\Http\UriFactory;
+use AndrewSvirin\Interview\Factories\Models\ModelFactory;
+use AndrewSvirin\Interview\Gateways\Db\AirplaneTableGateway;
+use AndrewSvirin\Interview\Repositories\AirplaneRepository;
 use AndrewSvirin\Interview\Services\ApiServer;
 use AndrewSvirin\Interview\Services\DbClient;
 use AndrewSvirin\Interview\Services\Router;
@@ -50,6 +54,7 @@ $config = [
         DbClient::class,
         ApiServer::class,
         Router::class,
+        ModelFactory::class,
         // Http Services.
         UriFactoryInterface::class => UriFactory::class,
         RequestFactoryInterface::class => RequestFactory::class,
@@ -67,6 +72,12 @@ $config = [
         ApiRequestValidator::class,
         MaxValueValidator::class,
         RequiredValueValidator::class,
+        // Gateway services.
+        AirplaneTableGateway::class,
+        // Repository services.
+        AirplaneRepository::class,
+        // Facade services.
+        AirplaneFacade::class,
     ],
 
     // Routes those accessible from router.

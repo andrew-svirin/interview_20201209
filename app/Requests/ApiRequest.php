@@ -34,6 +34,11 @@ abstract class ApiRequest extends JsonRequest
         // Prepare json field names by rules.
         $fields = array_keys($this->rules());
 
+        // If rules were not specified any fields.
+        if (empty($fields)) {
+            return [];
+        }
+
         $validated = ArrHelper::filter($json, $fields);
 
         return $validated;

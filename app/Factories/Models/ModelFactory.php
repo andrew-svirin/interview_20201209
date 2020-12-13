@@ -1,33 +1,30 @@
 <?php
 
-namespace AndrewSvirin\Interview\Factories\Http;
+namespace AndrewSvirin\Interview\Factories\Models;
 
 use AndrewSvirin\Interview\Exceptions\ClassNamespaceIncorrectException;
 use AndrewSvirin\Interview\Exceptions\ClassNotExistsException;
-use AndrewSvirin\Interview\Requests\ApiRequest;
-use Psr\Http\Message\RequestInterface;
+use AndrewSvirin\Interview\Models\Model;
 use ReflectionClass;
-use ReflectionException;
 
 /**
- * Produce child api request instance.
+ * Produce child model instance.
  * Abstract factory.
  */
-class ApiRequestFactory
+class ModelFactory
 {
 
     /**
-     * Create API request.
+     * Produce model instance from class name.
      *
      * @param string $className
-     * @param RequestInterface $request
      *
-     * @return ApiRequest
-     * @throws ReflectionException
-     * @throws ClassNotExistsException
+     * @return Model
      * @throws ClassNamespaceIncorrectException
+     * @throws ClassNotExistsException
+     * @throws \ReflectionException
      */
-    public function createApiRequest(string $className, RequestInterface $request): ApiRequest
+    public function createModel(string $className): Model
     {
         // Check that class name exists.
         if (!class_exists($className)) {
@@ -35,10 +32,10 @@ class ApiRequestFactory
         }
 
         // Check that class name is child of api request.
-        if (!is_subclass_of($className, ApiRequest::class)) {
+        if (!is_subclass_of($className, Model::class)) {
             throw new ClassNamespaceIncorrectException(sprintf(
                 'Allowed argument with instance of `%s`.',
-                ApiRequest::class
+                Model::class
             ));
         }
 
@@ -46,12 +43,9 @@ class ApiRequestFactory
         $class = new ReflectionClass($className);
 
         // Create instance of class by reflection class.
-        /* @var $apiRequest ApiRequest */
-        $apiRequest = $class->newInstanceArgs([
-            $request->getMethod(),
-            $request->getUri()
-        ]);
+        /* @var $model Model */
+        $model = $class->newInstanceArgs();
 
-        return $apiRequest;
+        return $model;
     }
 }

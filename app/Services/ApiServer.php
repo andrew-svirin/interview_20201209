@@ -180,16 +180,12 @@ class ApiServer
         $parameter = reset($parameters);
 
         // Check that argument is child of api request.
-        if (!($parameterClass = $parameter->getClass()) ||
-            !is_subclass_of($parameterClass->getName(), ApiRequest::class)
-        ) {
-            throw new ControllerActionArgumentIncorrectException(
-                'Allowed argument with instance of ApiRequest.'
-            );
+        if (!($parameterClass = $parameter->getClass())) {
+            throw new ControllerActionArgumentIncorrectException('Allowed argument is instance of class.');
         }
 
         // Create new instance of api request.
-        $apiRequest = $this->apiRequestFactory->createApiRequest($parameterClass->getName(), $request);
+        $apiRequest = $this->apiRequestFactory->createApiRequest($parameter->getClass()->getName(), $request);
         // Populate body if it exists.
         if (!empty($request->getBody())) {
             $apiRequest->withBody($request->getBody());
@@ -210,10 +206,7 @@ class ApiServer
         if ($apiResponse instanceof ApiResponse) {
             $apiResponseInstance = $apiResponse;
         } else {
-            $apiResponseInstance = $this->apiResponseFactory->createApiResponse(
-                200,
-                ''
-            );
+            $apiResponseInstance = $this->apiResponseFactory->createApiResponse(200, '');
             $body = $this->jsonStreamFactory->createStreamFromJson($apiResponse);
             $apiResponseInstance->withBody($body);
         }
