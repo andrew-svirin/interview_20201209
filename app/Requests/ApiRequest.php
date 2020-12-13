@@ -23,7 +23,7 @@ abstract class ApiRequest extends JsonRequest
     }
 
     /**
-     * Get validated json.
+     * Get json values those are present in rules.
      *
      * @return array
      */
@@ -31,8 +31,10 @@ abstract class ApiRequest extends JsonRequest
     {
         $json = $this->getJson();
 
-        $rules = $this->rules();
-        $validated = ArrHelper::filter($json, $rules);
+        // Prepare json field names by rules.
+        $fields = array_keys($this->rules());
+
+        $validated = ArrHelper::filter($json, $fields);
 
         return $validated;
     }

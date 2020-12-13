@@ -75,7 +75,8 @@ class ApiServer
     private ApiResponseFactory $apiResponseFactory;
 
     /**
-     * Container.
+     * Container for get controller service.
+     *
      * @var ContainerInterface
      */
     private ContainerInterface $container;

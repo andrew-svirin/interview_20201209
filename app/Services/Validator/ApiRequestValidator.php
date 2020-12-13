@@ -10,8 +10,16 @@ use AndrewSvirin\Interview\Requests\ApiRequest;
 class ApiRequestValidator
 {
 
-    public function __construct()
+    /**
+     * Value validator.
+     *
+     * @var Validator
+     */
+    private Validator $validator;
+
+    public function __construct(Validator $validator)
     {
+        $this->validator = $validator;
     }
 
     /**
@@ -23,6 +31,23 @@ class ApiRequestValidator
      */
     public function validate(ApiRequest $apiRequest): ?array
     {
-        return [];
+        $values = $apiRequest->validated();
+        $rules = $apiRequest->rules();
+
+        $violations = null;
+
+        // Go over rules because, validated values can be less than rules.
+        foreach ($rules as $field => $fieldRules) {
+            $fieldViolations = $this->validator->validate($values[$field] ?? null, $fieldRules);
+
+            // Ignore when value does not violate rules.
+            if (null === $fieldViolations) {
+                continue;
+            }
+
+            $violations[$field] = $fieldViolations;
+        }
+
+        return $violations;
     }
 }

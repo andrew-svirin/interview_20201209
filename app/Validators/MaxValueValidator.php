@@ -1,6 +1,6 @@
 <?php
 
-namespace AndrewSvirin\Interview\Services\Validators;
+namespace AndrewSvirin\Interview\Validators;
 
 use AndrewSvirin\Interview\Services\Validator\ValueValidator;
 

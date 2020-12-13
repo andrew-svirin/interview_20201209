@@ -34,7 +34,16 @@ class ApiRequestValidatorTest extends BaseTestCase
         $violations = $apiRequestValidator->validate($apiRequest);
 
         $this->assertEquals([
-
+            'aircraft_type' => [
+                [
+                    'Field :field can not be empty.',
+                ],
+            ],
+            'sits_count' => [
+                [
+                    'Field :field can not be more than 1000.',
+                ],
+            ],
         ], $violations);
     }
 }

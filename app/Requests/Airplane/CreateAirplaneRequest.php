@@ -3,8 +3,8 @@
 namespace AndrewSvirin\Interview\Requests\Airplane;
 
 use AndrewSvirin\Interview\Requests\ApiRequest;
-use AndrewSvirin\Interview\Services\Validators\MaxValueValidator;
-use AndrewSvirin\Interview\Services\Validators\RequiredValueValidator;
+use AndrewSvirin\Interview\Validators\MaxValueValidator;
+use AndrewSvirin\Interview\Validators\RequiredValueValidator;
 
 /**
  * Create airplane request.
