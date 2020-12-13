@@ -4,6 +4,7 @@ namespace AndrewSvirin\Interview\Tests\Components;
 
 use AndrewSvirin\Interview\App;
 use AndrewSvirin\Interview\Factories\Http\ResponseFactory;
+use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactoryInterface;
 use AndrewSvirin\Interview\Tests\BaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -26,11 +27,11 @@ trait ApiServerTrait
      *
      * @param string $method
      * @param string $uri
-     * @param string|null $body
+     * @param mixed|null $json Can be encoded string or encoding able data.
      *
      * @return ResponseInterface
      */
-    protected function request(string $method, string $uri, $body = null): ResponseInterface
+    protected function request(string $method, string $uri, $json = null): ResponseInterface
     {
         /* @var $app App */
         $app = $this->container->get(App::class);
@@ -39,34 +40,18 @@ trait ApiServerTrait
         $_SERVER['REQUEST_METHOD'] = $method;
         $_SERVER['REQUEST_URI'] = $uri;
 
-        // Convert body to string by json encoding.
-        if (!is_string($body)) {
-            $requestBody = json_encode($body);
+        // Put json to the body stream.
+        if (!is_string($json)) {
+            /* @var $inputStreamFactory JsonStreamFactoryInterface */
+            $inputStreamFactory = $this->container->get(JsonStreamFactoryInterface::class);
+            $body = $inputStreamFactory->createStreamFromJson($json);
         } else {
-            $requestBody = $body;
+            /* @var $inputStreamFactory StreamFactoryInterface */
+            $inputStreamFactory = $this->container->get(StreamFactoryInterface::class);
+            $body = $inputStreamFactory->createStream($json);
         }
-        // Put body into request.
-        $stream = fopen('php://input', 'w');
-        fwrite($stream, $requestBody);
-        fclose($stream);
 
-        // Run application and catch response body.
-        ob_start();
-        $app->run();
-        $responseBody = ob_get_contents();
-        ob_end_clean();
-
-        // Simulate response.
-        $responseCode = http_response_code();
-
-        /* @var $responseFactory ResponseFactory */
-        $responseFactory = $this->container->get(ResponseFactoryInterface::class);
-        $response = $responseFactory->createResponse($responseCode, '');
-
-        /* @var $streamFactory StreamFactoryInterface */
-        $streamFactory = $this->container->get(StreamFactoryInterface::class);
-        $body = $streamFactory->createStream($responseBody);
-        $response->withBody($body);
+        $response = $app->resolveResponse($method, $uri, $body);
 
         return $response;
     }

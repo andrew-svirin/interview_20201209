@@ -11,7 +11,7 @@ interface InputStreamFactoryInterface
 {
 
     /**
-     * Create stream from input.
+     * Create stream from input (read only).
      *
      * @return StreamInterface
      */

@@ -5,6 +5,8 @@ namespace AndrewSvirin\Interview;
 use AndrewSvirin\Interview\Factories\Http\Stream\InputStreamFactoryInterface;
 use AndrewSvirin\Interview\Services\ApiServer;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use ReflectionException;
 
 /**
@@ -45,29 +47,45 @@ class App
     }
 
     /**
-     * Process request and output response.
+     * Prepare request and output response.
      *
      * @throws Exceptions\ControllerActionArgumentIncorrectException
      * @throws Exceptions\ControllerActionNotFoundException
      * @throws Exceptions\RouteNotFoundException
      * @throws ReflectionException
-     * @throws Exceptions\ResponseIncorrectException
      */
     public function run(): void
     {
         // Get $_SERVER data and STDIN stream and create request.
-        $request = $this->requestFactory->createRequest(
-            $_SERVER['REQUEST_METHOD'],
-            $_SERVER['REQUEST_URI']
-        );
-
         $body = $this->inputStreamFactory->createStreamFromInput();
-        $request->withBody($body);
-
-        $response = $this->apiServer->handleRequest($request);
+        $response = $this->resolveResponse($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $body);
 
         // Output response.
         http_response_code($response->getStatusCode());
         echo $response->getBody();
+    }
+
+    /**
+     * Create Request and handle it to resolve response.
+     *
+     * @param string $method
+     * @param string $uri
+     * @param StreamInterface $body
+     *
+     * @return ResponseInterface
+     * @throws Exceptions\ControllerActionArgumentIncorrectException
+     * @throws Exceptions\ControllerActionNotFoundException
+     * @throws Exceptions\RouteNotFoundException
+     * @throws ReflectionException
+     */
+    public function resolveResponse(string $method, string $uri, StreamInterface $body)
+    {
+        // Create request.
+        $request = $this->requestFactory->createRequest($method, $uri);
+        $request->withBody($body);
+
+        $response = $this->apiServer->handleRequest($request);
+
+        return $response;
     }
 }

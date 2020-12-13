@@ -29,6 +29,7 @@ class InputStreamFactory implements InputStreamFactoryInterface
      */
     public function createStreamFromInput(): StreamInterface
     {
+        // Create stream from STDIN (read-only).
         $resource = fopen('php://input', 'r');
         if (false === $resource) {
             throw new RuntimeException('Resource not opened.');

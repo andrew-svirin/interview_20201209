@@ -34,16 +34,17 @@ class AirplaneFacade
     }
 
     /**
-     * Create Airplane model from array.
+     * Create Airplane model from array of values.
      *
-     * @param array $attributes
+     * @param array $values
      *
      * @return Airplane
      */
-    public function create(array $attributes): Airplane
+    public function create(array $values): Airplane
     {
         /* @var $model Airplane */
         $model = $this->modelFactory->createModel(Airplane::class);
+        $model->setValues($values);
 
         return $model; // @phpstan-ignore-line
     }
@@ -58,6 +59,7 @@ class AirplaneFacade
      */
     public function save(Airplane $model): bool
     {
+        $values = $model->getValues();
         return true;
     }
 }

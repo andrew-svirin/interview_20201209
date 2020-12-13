@@ -4,7 +4,7 @@ namespace AndrewSvirin\Interview\Controllers;
 
 use AndrewSvirin\Interview\Exceptions\ModelNotSavedException;
 use AndrewSvirin\Interview\Facades\AirplaneFacade;
-use AndrewSvirin\Interview\Requests\Site\GetSiteVersionRequest;
+use AndrewSvirin\Interview\Requests\Airplane\CreateAirplaneRequest;
 use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
 
 /**
@@ -29,12 +29,12 @@ class AirplaneController extends ApiController
     /**
      * Get application version.
      *
-     * @param GetSiteVersionRequest $request
+     * @param CreateAirplaneRequest $request
      *
      * @return array
      * @throws ModelNotSavedException
      */
-    public function createAction(GetSiteVersionRequest $request)
+    public function createAction(CreateAirplaneRequest $request)
     {
         // Validate request.
         $violations = $this->validate($request);

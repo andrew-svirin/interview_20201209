@@ -20,7 +20,7 @@ class AirplaneControllerTest extends BaseTestCase
             'aircraft_type' => 'short_range',
             'sits_count' => 156,
             'rows' => 26,
-            'row_arrangement' => 'A B C _ D E F'
+            'row_arrangement' => 'A B C _ D E F',
         ]);
 
         $this->assertResponseJson($response, ['message' => 'Airplane created.']);

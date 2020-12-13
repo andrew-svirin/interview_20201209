@@ -18,6 +18,7 @@ class StreamFactory implements StreamFactoryInterface
      */
     public function createStream(string $content = ''): StreamInterface
     {
+        // Create random file to hold string in stream.
         $resource = fopen('php://temp', 'w+');
         if (false === $resource) {
             throw new RuntimeException('Resource not opened.');

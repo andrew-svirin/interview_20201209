@@ -8,4 +8,13 @@ namespace AndrewSvirin\Interview\Models;
 class Airplane extends Model
 {
 
+    /**
+     * @inheritDoc
+     */
+    protected array $attributes = [
+        'aircraft_type',
+        'sits_count',
+        'rows',
+        'row_arrangement',
+    ];
 }
