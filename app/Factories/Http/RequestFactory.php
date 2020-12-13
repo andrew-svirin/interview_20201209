@@ -1,6 +1,6 @@
 <?php
 
-namespace AndrewSvirin\Interview\Factories;
+namespace AndrewSvirin\Interview\Factories\Http;
 
 use AndrewSvirin\Interview\Http\Request;
 use LogicException;

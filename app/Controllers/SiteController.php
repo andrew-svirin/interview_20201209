@@ -7,7 +7,7 @@ use AndrewSvirin\Interview\Requests\Site\GetSiteVersionRequest;
 /**
  * Site Controller implementation.
  */
-class SiteController extends Controller
+class SiteController extends ApiController
 {
 
     /**

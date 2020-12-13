@@ -4,6 +4,9 @@ namespace AndrewSvirin\Interview\Services;
 
 use AndrewSvirin\Interview\Adapters\Db\DbAdapterInterface;
 
+/**
+ * Implements database access.
+ */
 class DbClient
 {
 

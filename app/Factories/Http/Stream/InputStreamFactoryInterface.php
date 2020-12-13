@@ -1,6 +1,6 @@
 <?php
 
-namespace AndrewSvirin\Interview\Factories\Stream;
+namespace AndrewSvirin\Interview\Factories\Http\Stream;
 
 use Psr\Http\Message\StreamInterface;
 

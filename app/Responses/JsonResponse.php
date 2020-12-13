@@ -2,17 +2,16 @@
 
 namespace AndrewSvirin\Interview\Responses;
 
+use AndrewSvirin\Interview\Http\Json\JsonMessage;
 use AndrewSvirin\Interview\Http\Response;
 
 /**
  * Common json response model implementation.
  */
-class JsonResponse extends Response
+class JsonResponse extends Response implements JsonMessage
 {
     /**
-     * Get json data from body.
-     *
-     * @return array|null
+     * @inheritDoc
      */
     public function getJson(): ?array
     {

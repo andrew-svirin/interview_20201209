@@ -12,10 +12,12 @@ abstract class ApiRequest extends JsonRequest
 
     /**
      * Specifying rules for fields allowed in request.
+     * Example:
+     *   'field' => [[<RuleClassName>, ['<option_name>' => 'option_value']]],
      *
      * @return array
      */
-    protected function rules()
+    public function rules()
     {
         return [];
     }

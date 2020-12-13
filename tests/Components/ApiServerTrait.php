@@ -3,7 +3,7 @@
 namespace AndrewSvirin\Interview\Tests\Components;
 
 use AndrewSvirin\Interview\App;
-use AndrewSvirin\Interview\Factories\ResponseFactory;
+use AndrewSvirin\Interview\Factories\Http\ResponseFactory;
 use AndrewSvirin\Interview\Tests\BaseTestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -18,7 +18,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @property ContainerInterface $container
  *
  */
-trait ApiTrait
+trait ApiServerTrait
 {
 
     /**

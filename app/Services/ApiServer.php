@@ -5,8 +5,9 @@ namespace AndrewSvirin\Interview\Services;
 use AndrewSvirin\Interview\Exceptions\ControllerActionArgumentIncorrectException;
 use AndrewSvirin\Interview\Exceptions\ControllerActionNotFoundException;
 use AndrewSvirin\Interview\Exceptions\RouteNotFoundException;
-use AndrewSvirin\Interview\Factories\ApiResponseFactory;
-use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactoryInterface;
+use AndrewSvirin\Interview\Factories\Http\ApiRequestFactory;
+use AndrewSvirin\Interview\Factories\Http\ApiResponseFactory;
+use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactoryInterface;
 use AndrewSvirin\Interview\Requests\ApiRequest;
 use AndrewSvirin\Interview\Responses\ApiResponse;
 use LogicException;
@@ -60,11 +61,19 @@ class ApiServer
     private JsonStreamFactoryInterface $jsonStreamFactory;
 
     /**
+     * ApiRequest Factory.
+     *
+     * @var ApiRequestFactory
+     */
+    private ApiRequestFactory $apiRequestFactory;
+
+    /**
      * ApiResponse Factory.
      *
      * @var ApiResponseFactory
      */
     private ApiResponseFactory $apiResponseFactory;
+
     /**
      * Container.
      * @var ContainerInterface
@@ -77,6 +86,7 @@ class ApiServer
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         JsonStreamFactoryInterface $jsonStreamFactory,
+        ApiRequestFactory $apiRequestFactory,
         ApiResponseFactory $apiResponseFactory,
         ContainerInterface $container
     ) {
@@ -85,6 +95,7 @@ class ApiServer
         $this->responseFactory = $responseFactory;
         $this->streamFactory = $streamFactory;
         $this->jsonStreamFactory = $jsonStreamFactory;
+        $this->apiRequestFactory = $apiRequestFactory;
         $this->apiResponseFactory = $apiResponseFactory;
         $this->container = $container;
     }
@@ -177,16 +188,13 @@ class ApiServer
         }
 
         // Create new instance of api request.
-        /* @var $apiRequest ApiRequest */
-        $apiRequest = $parameter->getClass()->newInstanceArgs([
-            $request->getMethod(),
-            $request->getUri()
-        ]);
+        $apiRequest = $this->apiRequestFactory->createApiRequest($parameterClass->getName(), $request);
+        // Populate body if it exists.
         if (!empty($request->getBody())) {
-            $apiRequest->withBody($request->getBody()); // @phpstan-ignore-line
+            $apiRequest->withBody($request->getBody());
         }
 
-        return $apiRequest; // @phpstan-ignore-line
+        return $apiRequest;
     }
 
     /**

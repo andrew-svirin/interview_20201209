@@ -2,7 +2,7 @@
 
 namespace AndrewSvirin\Interview;
 
-use AndrewSvirin\Interview\Factories\Stream\InputStreamFactoryInterface;
+use AndrewSvirin\Interview\Factories\Http\Stream\InputStreamFactoryInterface;
 use AndrewSvirin\Interview\Services\ApiServer;
 use Psr\Http\Message\RequestFactoryInterface;
 use ReflectionException;

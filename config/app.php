@@ -7,18 +7,23 @@ use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
 use AndrewSvirin\Interview\App;
 use AndrewSvirin\Interview\Controllers\AirplaneController;
 use AndrewSvirin\Interview\Controllers\SiteController;
-use AndrewSvirin\Interview\Factories\ApiResponseFactory;
-use AndrewSvirin\Interview\Factories\Stream\InputStreamFactory;
-use AndrewSvirin\Interview\Factories\Stream\InputStreamFactoryInterface;
-use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactory;
-use AndrewSvirin\Interview\Factories\Stream\JsonStreamFactoryInterface;
-use AndrewSvirin\Interview\Factories\RequestFactory;
-use AndrewSvirin\Interview\Factories\ResponseFactory;
-use AndrewSvirin\Interview\Factories\Stream\StreamFactory;
-use AndrewSvirin\Interview\Factories\UriFactory;
+use AndrewSvirin\Interview\Factories\Http\ApiRequestFactory;
+use AndrewSvirin\Interview\Factories\Http\ApiResponseFactory;
+use AndrewSvirin\Interview\Factories\Http\RequestFactory;
+use AndrewSvirin\Interview\Factories\Http\ResponseFactory;
+use AndrewSvirin\Interview\Factories\Http\Stream\InputStreamFactory;
+use AndrewSvirin\Interview\Factories\Http\Stream\InputStreamFactoryInterface;
+use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactory;
+use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactoryInterface;
+use AndrewSvirin\Interview\Factories\Http\Stream\StreamFactory;
+use AndrewSvirin\Interview\Factories\Http\UriFactory;
 use AndrewSvirin\Interview\Services\ApiServer;
 use AndrewSvirin\Interview\Services\DbClient;
 use AndrewSvirin\Interview\Services\Router;
+use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
+use AndrewSvirin\Interview\Services\Validator\Validator;
+use AndrewSvirin\Interview\Services\Validators\MaxValueValidator;
+use AndrewSvirin\Interview\Services\Validators\RequiredValueValidator;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -34,6 +39,7 @@ $config = [
         'port' => 3306,
     ],
 
+    // TODO: services can be auto wired.
     // Services those accessible from container.
     // example: 'alias' => 'className',
     // example: 'interfaceName' => 'className',
@@ -43,16 +49,24 @@ $config = [
         DbAdapterInterface::class => MySqlAdapter::class,
         DbClient::class,
         ApiServer::class,
+        Router::class,
+        // Http Services.
         UriFactoryInterface::class => UriFactory::class,
         RequestFactoryInterface::class => RequestFactory::class,
         ResponseFactoryInterface::class => ResponseFactory::class,
         StreamFactoryInterface::class => StreamFactory::class,
         JsonStreamFactoryInterface::class => JsonStreamFactory::class,
         InputStreamFactoryInterface::class => InputStreamFactory::class,
+        ApiRequestFactory::class,
         ApiResponseFactory::class,
-        Router::class,
+        // Controller services.
         SiteController::class,
         AirplaneController::class,
+        // Validator services.
+        Validator::class,
+        ApiRequestValidator::class,
+        MaxValueValidator::class,
+        RequiredValueValidator::class,
     ],
 
     // Routes those accessible from router.

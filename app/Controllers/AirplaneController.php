@@ -7,7 +7,7 @@ use AndrewSvirin\Interview\Requests\Site\GetSiteVersionRequest;
 /**
  * Airplane Controller implementation.
  */
-class AirplaneController extends Controller
+class AirplaneController extends ApiController
 {
 
     /**

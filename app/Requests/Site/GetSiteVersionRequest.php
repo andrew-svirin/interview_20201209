@@ -10,12 +10,4 @@ use AndrewSvirin\Interview\Requests\ApiRequest;
  */
 class GetSiteVersionRequest extends ApiRequest
 {
-
-    /**
-     * @inheritDoc
-     */
-    protected function rules(): array
-    {
-        return [];
-    }
 }
