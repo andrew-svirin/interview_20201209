@@ -5,15 +5,15 @@ namespace AndrewSvirin\Interview\Gateways\Db;
 use LogicException;
 
 /**
- * Gateway operating with `airplane` table.
+ * Gateway operating with `ticket_orders` table.
  */
-class AirplaneTableGateway extends TableGateway
+class TicketOrderTableGateway extends TableGateway
 {
 
-    const AUTO_INCREMENT = 'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = "airplanes";';
+    const AUTO_INCREMENT = 'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = "ticket_orders";';
 
-    const CREATE = 'INSERT INTO `airplanes` ' .
-    '(`id`, `aircraft_type`, `sits_count`, `rows`, `row_arrangement`) VALUES (?, ?, ?, ?, ?);';
+    const CREATE = 'INSERT INTO `ticket_orders` ' .
+    '(`id`, `airplane_id`, `person_name`) VALUES (?, ?, ?);';
 
     const FIND = '';
 
@@ -42,10 +42,8 @@ class AirplaneTableGateway extends TableGateway
             $id = $this->getAutoIncrement();
             $this->dbClient->query(self::CREATE, [
                 $id,
-                $row['aircraft_type'] ?? null,
-                $row['sits_count'] ?? null,
-                $row['rows'] ?? null,
-                $row['row_arrangement'] ?? null,
+                $row['airplane_id'] ?? null,
+                $row['person_name'] ?? null,
             ]);
         } else {
             throw new LogicException('Not predicted case for `update`.');

@@ -7,7 +7,12 @@ use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
 use AndrewSvirin\Interview\App;
 use AndrewSvirin\Interview\Controllers\AirplaneController;
 use AndrewSvirin\Interview\Controllers\SiteController;
+use AndrewSvirin\Interview\Controllers\TicketOrderController;
+use AndrewSvirin\Interview\EventListeners\SaveTicketOrderTickets;
+use AndrewSvirin\Interview\Events\TicketOrderCreated;
 use AndrewSvirin\Interview\Facades\AirplaneFacade;
+use AndrewSvirin\Interview\Facades\TicketFacade;
+use AndrewSvirin\Interview\Facades\TicketOrderFacade;
 use AndrewSvirin\Interview\Factories\Http\ApiRequestFactory;
 use AndrewSvirin\Interview\Factories\Http\ApiResponseFactory;
 use AndrewSvirin\Interview\Factories\Http\RequestFactory;
@@ -20,10 +25,16 @@ use AndrewSvirin\Interview\Factories\Http\Stream\StreamFactory;
 use AndrewSvirin\Interview\Factories\Http\UriFactory;
 use AndrewSvirin\Interview\Factories\Models\ModelFactory;
 use AndrewSvirin\Interview\Gateways\Db\AirplaneTableGateway;
+use AndrewSvirin\Interview\Gateways\Db\TicketOrderTableGateway;
+use AndrewSvirin\Interview\Gateways\Db\TicketTableGateway;
 use AndrewSvirin\Interview\Repositories\AirplaneRepository;
+use AndrewSvirin\Interview\Repositories\TicketOrderRepository;
+use AndrewSvirin\Interview\Repositories\TicketRepository;
 use AndrewSvirin\Interview\Services\ApiServer;
 use AndrewSvirin\Interview\Services\DbClient;
+use AndrewSvirin\Interview\Services\EventDispatcher\EventDispatcher;
 use AndrewSvirin\Interview\Services\Router;
+use AndrewSvirin\Interview\Services\Ticket\TicketSitCalculator;
 use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
 use AndrewSvirin\Interview\Services\Validator\Validator;
 use AndrewSvirin\Interview\Validators\MaxValueValidator;
@@ -55,6 +66,8 @@ $config = [
         ApiServer::class,
         Router::class,
         ModelFactory::class,
+        EventDispatcher::class,
+        TicketSitCalculator::class,
         // Http Services.
         UriFactoryInterface::class => UriFactory::class,
         RequestFactoryInterface::class => RequestFactory::class,
@@ -64,20 +77,29 @@ $config = [
         InputStreamFactoryInterface::class => InputStreamFactory::class,
         ApiRequestFactory::class,
         ApiResponseFactory::class,
-        // Controller services.
-        SiteController::class,
-        AirplaneController::class,
         // Validator services.
         Validator::class,
         ApiRequestValidator::class,
         MaxValueValidator::class,
         RequiredValueValidator::class,
+        // Controller services.
+        SiteController::class,
+        AirplaneController::class,
+        TicketOrderController::class,
         // Gateway services.
         AirplaneTableGateway::class,
+        TicketOrderTableGateway::class,
+        TicketTableGateway::class,
         // Repository services.
         AirplaneRepository::class,
+        TicketOrderRepository::class,
+        TicketRepository::class,
         // Facade services.
         AirplaneFacade::class,
+        TicketOrderFacade::class,
+        TicketFacade::class,
+        // Event listeners.
+        SaveTicketOrderTickets::class
     ],
 
     // Routes those accessible from router.
@@ -89,6 +111,16 @@ $config = [
         ],
         'api/airplanes' => [
             'POST' => ['Airplane', 'create'],
+        ],
+        'api/ticket-orders' => [
+            'POST' => ['TicketOrder', 'create'],
+        ],
+    ],
+
+    // Subscriptions event listeners on events for event dispatcher.
+    'event_subscriptions' => [
+        TicketOrderCreated::class => [
+            SaveTicketOrderTickets::class,
         ],
     ],
 

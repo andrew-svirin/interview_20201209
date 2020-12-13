@@ -3,21 +3,21 @@
 namespace AndrewSvirin\Interview\Repositories;
 
 use AndrewSvirin\Interview\Factories\Models\ModelFactory;
-use AndrewSvirin\Interview\Gateways\Db\AirplaneTableGateway;
-use AndrewSvirin\Interview\Models\Airplane;
+use AndrewSvirin\Interview\Gateways\Db\TicketOrderTableGateway;
+use AndrewSvirin\Interview\Models\TicketOrder;
 
 /**
- * Implements db layer operations with model Airplane.
+ * Implements db layer operations with model TicketOrder.
  */
-class AirplaneRepository
+class TicketOrderRepository
 {
 
     /**
-     * Airplane table gateway.
+     * TicketOrder table gateway.
      *
-     * @var AirplaneTableGateway
+     * @var TicketOrderTableGateway
      */
-    private AirplaneTableGateway $airplaneTableGateway;
+    private TicketOrderTableGateway $ticketOrderTableGateway;
 
     /**
      * Model factory to create Airplane model.
@@ -26,9 +26,9 @@ class AirplaneRepository
      */
     private ModelFactory $modelFactory;
 
-    public function __construct(AirplaneTableGateway $airplaneTableGateway, ModelFactory $modelFactory)
+    public function __construct(TicketOrderTableGateway $ticketOrderTableGateway, ModelFactory $modelFactory)
     {
-        $this->airplaneTableGateway = $airplaneTableGateway;
+        $this->ticketOrderTableGateway = $ticketOrderTableGateway;
         $this->modelFactory = $modelFactory;
     }
 
@@ -36,12 +36,12 @@ class AirplaneRepository
      * Save model to storage.
      * This method will add model primary id.
      *
-     * @param Airplane $model
+     * @param TicketOrder $model
      */
-    public function save(Airplane $model): bool
+    public function save(TicketOrder $model): bool
     {
         $row = $model->getValues();
-        $id = $this->airplaneTableGateway->save($row);
+        $id = $this->ticketOrderTableGateway->save($row);
         if (null === $id) {
             return false;
         }
@@ -50,13 +50,13 @@ class AirplaneRepository
     }
 
     /**
-     * Find airplane model by id.
+     * Find TicketOrder model by id.
      *
      * @param int $id
      *
-     * @return Airplane|null
+     * @return TicketOrder|null
      */
-    public function findById(int $id): ?Airplane
+    public function findById(int $id): ?TicketOrder
     {
         $models = $this->findMultiple(['id' => $id]);
 
@@ -72,15 +72,15 @@ class AirplaneRepository
     }
 
     /**
-     * Find airplane models by conditions.
+     * Find TicketOrder models by conditions.
      *
      * @param array $conditions
      *
-     * @return Airplane[]|null
+     * @return TicketOrder[]|null
      */
     public function findMultiple(array $conditions): ?array
     {
-        $rows = $this->airplaneTableGateway->findMultiple($conditions);
+        $rows = $this->ticketOrderTableGateway->findMultiple($conditions);
 
         // Check if any records were found.
         if (empty($rows)) {
@@ -90,8 +90,8 @@ class AirplaneRepository
         $models = [];
 
         foreach ($rows as $row) {
-            /* @var $model Airplane */
-            $model = $this->modelFactory->createModel(Airplane::class);
+            /* @var $model TicketOrder */
+            $model = $this->modelFactory->createModel(TicketOrder::class);
             $model->setValues($row);
 
             $models[] = $model;

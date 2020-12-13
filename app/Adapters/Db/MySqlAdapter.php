@@ -53,13 +53,15 @@ class MySqlAdapter implements DbAdapterInterface
     ) {
         // Create query statement.
         if (!($stmt = mysqli_prepare($connection, $query))) {
-            throw new DbQueryInvalidException();
+            throw new DbQueryInvalidException(mysqli_error($connection));
         }
 
         // TODO: recognize params types correctly.
         // Bind parameters
-        $types = str_repeat('s', count($params));
-        mysqli_stmt_bind_param($stmt, $types, ...$params);
+        if (!empty($params)) {
+            $types = str_repeat('s', count($params));
+            mysqli_stmt_bind_param($stmt, $types, ...$params);
+        }
 
         // Execute query.
         mysqli_stmt_execute($stmt);
@@ -70,8 +72,9 @@ class MySqlAdapter implements DbAdapterInterface
         // Close statement.
         mysqli_stmt_close($stmt);
 
+        // Check that query result is empty.
         if (!$queryResult) {
-            throw new RuntimeException(mysqli_error($connection));
+            return null;
         }
 
         $outputResult = $this->output($queryResult, $outputFormat);
@@ -85,7 +88,7 @@ class MySqlAdapter implements DbAdapterInterface
      * @param mysqli_result|bool $queryResult
      * @param int $format
      *
-     * @return array|mixed
+     * @return array|mixed|null
      */
     private function output($queryResult, int $format)
     {

@@ -53,7 +53,7 @@ interface DbAdapterInterface
      * @param array|null $params
      * @param int $outputFormat
      *
-     * @return array|mixed
+     * @return array|mixed|null
      */
     public function query(
         $connection,

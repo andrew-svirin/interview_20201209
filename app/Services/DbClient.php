@@ -29,10 +29,26 @@ class DbClient
      */
     private $connection;
 
+    /**
+     * DbClient constructor.
+     * Create connection on construct.
+     *
+     * @param DbAdapterInterface $dbAdapter
+     * @param Config $config
+     */
     public function __construct(DBAdapterInterface $dbAdapter, Config $config)
     {
         $this->dbAdapter = $dbAdapter;
         $this->config = $config;
+        $this->connect();
+    }
+
+    /**
+     * Close db connection on destruction.
+     */
+    public function __destruct()
+    {
+        $this->close();
     }
 
     /**
@@ -73,7 +89,7 @@ class DbClient
      * @param array|null $params
      * @param int $outputFormat
      *
-     * @return array|mixed
+     * @return array|mixed|null
      */
     public function query(
         string $query,

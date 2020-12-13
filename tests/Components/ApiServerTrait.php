@@ -3,11 +3,10 @@
 namespace AndrewSvirin\Interview\Tests\Components;
 
 use AndrewSvirin\Interview\App;
-use AndrewSvirin\Interview\Factories\Http\ResponseFactory;
 use AndrewSvirin\Interview\Factories\Http\Stream\JsonStreamFactoryInterface;
+use AndrewSvirin\Interview\Helpers\ArrHelper;
 use AndrewSvirin\Interview\Tests\BaseTestCase;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -57,7 +56,7 @@ trait ApiServerTrait
     }
 
     /**
-     * Assert response body.
+     * Assert response json.
      *
      * @param ResponseInterface $response
      * @param array $json
@@ -69,5 +68,49 @@ trait ApiServerTrait
             $response->getBody(),
             'Failed asserting that response body not equal.'
         );
+    }
+
+    /**
+     * Assert response json has values.
+     *
+     * @param ResponseInterface $response
+     * @param array $values
+     */
+    protected function assertResponseJsonHas(ResponseInterface $response, array $values)
+    {
+        $json = json_decode($response->getBody(), true);
+
+        $has = true;
+        foreach ($values as $key => $value) {
+            $this->assertArrayHasKey($key, $json);
+            $this->assertEquals($value, $json[$key]);
+        }
+
+        $this->assertTrue($has);
+    }
+
+    /**
+     * Get json value.
+     *
+     * @param ResponseInterface $response
+     * @param string|null $key Dot syntax path.
+     *
+     * @return mixed|null
+     */
+    protected function getJson(ResponseInterface $response, string $key = null)
+    {
+        $json = json_decode($response->getBody(), true);
+
+        // Check if json is empty.
+        if (empty($json)) {
+            return null;
+        }
+
+        // Check if key path is empty.
+        if (null === $key) {
+            return $json;
+        }
+
+        return ArrHelper::get($json, $key);
     }
 }

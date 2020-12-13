@@ -50,8 +50,7 @@ class AirplaneFacade
     }
 
     /**
-     * Save model to storage.
-     * This method will add model primary id.
+     * Save model to repository.
      *
      * @param Airplane $model
      *
@@ -59,7 +58,18 @@ class AirplaneFacade
      */
     public function save(Airplane $model): bool
     {
-        $values = $model->getValues();
-        return true;
+        return $this->airplaneRepository->save($model);
+    }
+
+    /**
+     * Find model in repository.
+     *
+     * @param int $id
+     *
+     * @return Airplane|null
+     */
+    public function findById(int $id): ?Airplane
+    {
+        return $this->airplaneRepository->findById($id);
     }
 }

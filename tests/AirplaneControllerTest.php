@@ -12,6 +12,7 @@ class AirplaneControllerTest extends BaseTestCase
 
     /**
      * Send request to create airplane.
+     * @see \AndrewSvirin\Interview\Controllers\AirplaneController::createAction()
      * @group airplane-controller-create
      */
     public function testCreate()
@@ -23,6 +24,6 @@ class AirplaneControllerTest extends BaseTestCase
             'row_arrangement' => 'A B C _ D E F',
         ]);
 
-        $this->assertResponseJson($response, ['message' => 'Airplane created.']);
+        $this->assertResponseJsonHas($response, ['message' => 'Airplane created.']);
     }
 }

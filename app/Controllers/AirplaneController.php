@@ -27,7 +27,7 @@ class AirplaneController extends ApiController
     }
 
     /**
-     * Get application version.
+     * Create airplane.
      *
      * @param CreateAirplaneRequest $request
      *
@@ -54,6 +54,7 @@ class AirplaneController extends ApiController
 
         return [
             'message' => 'Airplane created.',
+            'data' => $model->getValues(),
         ];
     }
 }
