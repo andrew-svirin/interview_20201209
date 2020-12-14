@@ -64,7 +64,12 @@ class MySqlAdapter implements DbAdapterInterface
         }
 
         // Execute query.
-        mysqli_stmt_execute($stmt);
+        $execute = mysqli_stmt_execute($stmt);
+
+        // Execute result is false.
+        if (false === $execute) {
+            throw new DbQueryInvalidException($stmt->error);
+        }
 
         // Get query result.
         $queryResult = mysqli_stmt_get_result($stmt);

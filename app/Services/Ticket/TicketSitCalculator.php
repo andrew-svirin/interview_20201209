@@ -22,6 +22,6 @@ class TicketSitCalculator
      */
     public function calculate(Airplane $airplane, int $amount): array
     {
-        return [['A', 1]];
+        return [[1, 'A']];
     }
 }

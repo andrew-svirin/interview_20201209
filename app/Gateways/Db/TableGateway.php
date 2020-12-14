@@ -60,4 +60,23 @@ abstract class TableGateway
 
         return $conditionFieldsString;
     }
+
+    /**
+     * Get count value.
+     *
+     * @param array $result
+     *
+     * @return int
+     */
+    protected function getCountValue(array $result): int
+    {
+        // No any rows in result.
+        if (empty($result)) {
+            return 0;
+        }
+
+        $count = (int)$result[0]['AUTO_INCREMENT'];
+
+        return $count;
+    }
 }

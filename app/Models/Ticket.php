@@ -7,6 +7,7 @@ namespace AndrewSvirin\Interview\Models;
  *
  * @property int $id
  * @property int $ticket_order_id
+ * @property int $airplane_id
  * @property int $row_number
  * @property int $sit_number
  */
@@ -19,6 +20,7 @@ class Ticket extends Model
     protected array $attributes = [
         'id',
         'ticket_order_id',
+        'airplane_id',
         'row_number',
         'sit_number',
     ];

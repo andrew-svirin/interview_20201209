@@ -18,12 +18,12 @@ class TicketOrderController extends ApiController
      *
      * @var TicketOrderFacade
      */
-    private TicketOrderFacade $ticketOrder;
+    private TicketOrderFacade $ticketOrderFacade;
 
-    public function __construct(ApiRequestValidator $validator, TicketOrderFacade $ticketOrder)
+    public function __construct(ApiRequestValidator $validator, TicketOrderFacade $ticketOrderFacade)
     {
         parent::__construct($validator);
-        $this->ticketOrder = $ticketOrder;
+        $this->ticketOrderFacade = $ticketOrderFacade;
     }
 
     /**
@@ -47,10 +47,10 @@ class TicketOrderController extends ApiController
         $requestValues = $request->validated();
 
         // Create model from request validated values.
-        $model = $this->ticketOrder->create($requestValues);
+        $model = $this->ticketOrderFacade->create($requestValues);
 
         // Save model.
-        if (!$this->ticketOrder->save($model, $requestValues['sits_count'])) {
+        if (!$this->ticketOrderFacade->save($model, $requestValues['airplane_id'], $requestValues['sits_count'])) {
             throw new ModelNotSavedException();
         }
 

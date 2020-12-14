@@ -99,4 +99,17 @@ class TicketRepository
 
         return $models; // @phpstan-ignore-line
     }
+
+
+    /**
+     * Count Ticket models by conditions.
+     *
+     * @param array $conditions
+     *
+     * @return int
+     */
+    public function count(array $conditions): int
+    {
+        return $this->ticketTableGateway->count($conditions);
+    }
 }

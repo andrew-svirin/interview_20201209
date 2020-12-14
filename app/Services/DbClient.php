@@ -81,7 +81,7 @@ class DbClient
      * @param array|null $params
      * @param int $outputFormat
      *
-     * @return array|mixed|null
+     * @return array|mixed|false|null
      */
     public function query(
         string $query,

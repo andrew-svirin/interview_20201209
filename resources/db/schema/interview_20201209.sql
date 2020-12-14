@@ -12,7 +12,6 @@ CREATE TABLE airplanes
 CREATE TABLE ticket_orders
 (
     `id`          INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `airplane_id` INT(11)      NOT NULL,
     `person_name` VARCHAR(200) NOT NULL
 );
 
@@ -20,6 +19,7 @@ CREATE TABLE tickets
 (
     `id`              INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `ticket_order_id` INT(11)    NOT NULL,
+    `airplane_id`     INT(11)    NOT NULL,
     `row_number`      INT(11)    NOT NULL,
     `sit_number`      VARCHAR(1) NOT NULL
 );

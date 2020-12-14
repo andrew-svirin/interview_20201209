@@ -3,6 +3,7 @@
 namespace AndrewSvirin\Interview\EventListeners;
 
 use AndrewSvirin\Interview\Events\TicketOrderCreated;
+use AndrewSvirin\Interview\Exceptions\ModelNotSavedException;
 use AndrewSvirin\Interview\Facades\AirplaneFacade;
 use AndrewSvirin\Interview\Facades\TicketFacade;
 use AndrewSvirin\Interview\Services\EventDispatcher\EventInterface;
@@ -38,10 +39,12 @@ class SaveTicketOrderTickets implements EventListenerInterface
      * @inheritDoc
      *
      * @param TicketOrderCreated $event
+     *
+     * @throws ModelNotSavedException
      */
     public function perform(EventInterface $event): void
     {
-        $airplane = $this->airplaneFacade->findById($event->getTicketOrder()->airplane_id);
+        $airplane = $this->airplaneFacade->findById($event->getAirplaneId());
         $sits = $this->ticketFacade->calculateSits($airplane, $event->getSitsCount());
 
         // Go over sits to store tickets.
@@ -52,11 +55,14 @@ class SaveTicketOrderTickets implements EventListenerInterface
             // Create ticket model.
             $ticket = $this->ticketFacade->create([
                 'ticket_order_id' => $event->getTicketOrder()->id,
+                'airplane_id' => $airplane->id,
                 'row_number' => $rowNumber,
                 'sit_number' => $sitNumber,
             ]);
 
-            $this->ticketFacade->save($ticket);
+            if (!$this->ticketFacade->save($ticket)) {
+                throw new ModelNotSavedException();
+            }
         }
     }
 }

@@ -37,6 +37,7 @@ use AndrewSvirin\Interview\Services\Router;
 use AndrewSvirin\Interview\Services\Ticket\TicketSitCalculator;
 use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
 use AndrewSvirin\Interview\Services\Validator\Validator;
+use AndrewSvirin\Interview\Validators\AirplaneAbleSitsValueValidator;
 use AndrewSvirin\Interview\Validators\MaxValueValidator;
 use AndrewSvirin\Interview\Validators\RequiredValueValidator;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -82,6 +83,7 @@ $config = [
         ApiRequestValidator::class,
         MaxValueValidator::class,
         RequiredValueValidator::class,
+        AirplaneAbleSitsValueValidator::class,
         // Controller services.
         SiteController::class,
         AirplaneController::class,

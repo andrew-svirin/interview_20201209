@@ -87,6 +87,18 @@ class TicketFacade
     }
 
     /**
+     * Count models in repository by airplane.
+     *
+     * @param int $airplaneId
+     *
+     * @return int
+     */
+    public function countByAirplaneId(int $airplaneId): int
+    {
+        return $this->ticketRepository->count(['airplane_id' => $airplaneId]);
+    }
+
+    /**
      * Calculate sits.
      *
      * @param Airplane $airplane

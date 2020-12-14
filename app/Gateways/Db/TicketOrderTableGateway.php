@@ -12,10 +12,9 @@ class TicketOrderTableGateway extends TableGateway
 
     const AUTO_INCREMENT = 'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = "ticket_orders";';
 
-    const CREATE = 'INSERT INTO `ticket_orders` ' .
-    '(`id`, `airplane_id`, `person_name`) VALUES (?, ?, ?);';
+    const CREATE = 'INSERT INTO `ticket_orders` (`id`, `person_name`) VALUES (?, ?);';
 
-    const FIND = '';
+    const FIND = 'SELECT * FROM `ticket_orders`%s;';
 
     /**
      * Get auto incrementing id.
@@ -40,7 +39,6 @@ class TicketOrderTableGateway extends TableGateway
             $id = $this->getAutoIncrement();
             $this->dbClient->query(self::CREATE, [
                 $id,
-                $row['airplane_id'] ?? null,
                 $row['person_name'] ?? null,
             ]);
         } else {
@@ -59,7 +57,19 @@ class TicketOrderTableGateway extends TableGateway
      */
     public function findMultiple(array $conditions): ?array
     {
+        // Apply condition fields in query.
+        $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
-        return [];
+        // Put field conditions string in the query.
+        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+
+
+        // Prepare condition values.
+        $conditionValues = array_values($conditions);
+
+        // Do query.
+        $rows = $this->dbClient->query($query, $conditionValues);
+
+        return $rows;
     }
 }

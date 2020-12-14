@@ -13,9 +13,11 @@ class TicketTableGateway extends TableGateway
     const AUTO_INCREMENT = 'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = "tickets";';
 
     const CREATE = 'INSERT INTO `tickets` ' .
-    '(`id`, `ticket_order_id`, `row_number`, `sit_number`) VALUES (?, ?, ?, ?);';
+    '(`id`, `ticket_order_id`, `airplane_id`, `row_number`, `sit_number`) VALUES (?, ?, ?, ?, ?);';
 
-    const FIND = '';
+    const FIND = 'SELECT * FROM `tickets`%s;';
+
+    const COUNT = 'COUNT FROM `tickets`%s;';
 
     /**
      * Get auto incrementing id.
@@ -41,6 +43,7 @@ class TicketTableGateway extends TableGateway
             $this->dbClient->query(self::CREATE, [
                 $id,
                 $row['ticket_order_id'] ?? null,
+                $row['airplane_id'] ?? null,
                 $row['row_number'] ?? null,
                 $row['sit_number'] ?? null,
             ]);
@@ -60,7 +63,44 @@ class TicketTableGateway extends TableGateway
      */
     public function findMultiple(array $conditions): ?array
     {
+        // Apply condition fields in query.
+        $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
-        return [];
+        // Put field conditions string in the query.
+        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+
+
+        // Prepare condition values.
+        $conditionValues = array_values($conditions);
+
+        // Do query.
+        $rows = $this->dbClient->query($query, $conditionValues);
+
+        return $rows;
+    }
+
+    /**
+     * Count by conditions.
+     *
+     * @param array|null $conditions
+     *
+     * @return int
+     */
+    public function count(array $conditions = null): int
+    {
+        // Apply condition fields in query.
+        $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
+
+        // Put field conditions string in the query.
+        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+
+
+        // Prepare condition values.
+        $conditionValues = array_values($conditions);
+
+        // Do query.
+        $result = $this->dbClient->query($query, $conditionValues);
+
+        return $this->getCountValue($result);
     }
 }

@@ -23,11 +23,19 @@ class TicketOrderCreated implements EventInterface
      *
      * @var int
      */
+    private int $airplaneId;
+
+    /**
+     * Sits count.
+     *
+     * @var int
+     */
     private int $sitsCount;
 
-    public function __construct(TicketOrder $ticketOrder, int $sitsCount)
+    public function __construct(TicketOrder $ticketOrder, int $airplaneId, int $sitsCount)
     {
         $this->ticketOrder = $ticketOrder;
+        $this->airplaneId = $airplaneId;
         $this->sitsCount = $sitsCount;
     }
 
@@ -39,6 +47,16 @@ class TicketOrderCreated implements EventInterface
     public function getTicketOrder(): TicketOrder
     {
         return $this->ticketOrder;
+    }
+
+    /**
+     * Getter for airplaneId.
+     *
+     * @return int
+     */
+    public function getAirplaneId(): int
+    {
+        return $this->airplaneId;
     }
 
     /**
