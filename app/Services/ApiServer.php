@@ -2,6 +2,7 @@
 
 namespace AndrewSvirin\Interview\Services;
 
+use AndrewSvirin\Interview\Builders\ApiResponseBuilder;
 use AndrewSvirin\Interview\Exceptions\ControllerActionArgumentIncorrectException;
 use AndrewSvirin\Interview\Exceptions\ControllerActionNotFoundException;
 use AndrewSvirin\Interview\Exceptions\RouteNotFoundException;
@@ -203,7 +204,9 @@ class ApiServer
      */
     private function resolveResponse($apiResponse): ResponseInterface
     {
-        if ($apiResponse instanceof ApiResponse) {
+        if ($apiResponse instanceof ApiResponseBuilder) {
+            $apiResponseInstance = $apiResponse->getApiResponse();
+        } elseif ($apiResponse instanceof ApiResponse) {
             $apiResponseInstance = $apiResponse;
         } else {
             $apiResponseInstance = $this->apiResponseFactory->createApiResponse(200, '');

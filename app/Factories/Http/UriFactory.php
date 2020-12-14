@@ -15,8 +15,26 @@ class UriFactory implements UriFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createUri(string $uri = ''): UriInterface
+    public function createUri(string $url = ''): UriInterface
     {
-        return new Uri($uri);
+        $uri = new Uri();
+
+        // Parse uri.
+        $parsedUrl = parse_url(urldecode($url));
+
+        // Check that url was parsed.
+        if (!is_array($parsedUrl)) {
+            return $uri;
+        }
+
+        if (isset($parsedUrl['path'])) {
+            $uri->withPath($parsedUrl['path']);
+        }
+
+        if (isset($parsedUrl['query'])) {
+            $uri->withQuery($parsedUrl['query']);
+        }
+
+        return $uri;
     }
 }

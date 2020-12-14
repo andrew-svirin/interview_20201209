@@ -43,4 +43,14 @@ abstract class ApiRequest extends JsonRequest
 
         return $validated;
     }
+
+    /**
+     * Get conditions from query.
+     * @return array|null
+     */
+    public function conditions(): ?array
+    {
+        parse_str($this->uri->getQuery(), $queryArray);
+        return $queryArray['conditions'] ?? null;
+    }
 }

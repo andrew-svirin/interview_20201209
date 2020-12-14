@@ -75,7 +75,7 @@ abstract class TableGateway
             return 0;
         }
 
-        $count = (int)$result[0]['AUTO_INCREMENT'];
+        $count = (int)$result[0]['COUNT'];
 
         return $count;
     }

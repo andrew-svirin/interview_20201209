@@ -36,6 +36,7 @@ class Router
 
         // Check path.
         if (!($path = $routes[$request->getUri()->getPath()] ?? null)) {
+            $q = $request->getUri()->getQuery();
             throw new RouteNotFoundException(sprintf('Path `%s` not found', $request->getUri()->getPath()));
         }
 

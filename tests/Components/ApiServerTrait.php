@@ -35,10 +35,6 @@ trait ApiServerTrait
         /* @var $app App */
         $app = $this->container->get(App::class);
 
-        // Simulate request.
-        $_SERVER['REQUEST_METHOD'] = $method;
-        $_SERVER['REQUEST_URI'] = $uri;
-
         // Put json to the body stream.
         if (!is_string($json)) {
             /* @var $inputStreamFactory JsonStreamFactoryInterface */

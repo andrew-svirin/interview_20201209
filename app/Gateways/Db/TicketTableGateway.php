@@ -17,7 +17,7 @@ class TicketTableGateway extends TableGateway
 
     const FIND = 'SELECT * FROM `tickets`%s;';
 
-    const COUNT = 'COUNT FROM `tickets`%s;';
+    const COUNT = 'SELECT COUNT(*) as `COUNT` FROM `tickets`%s;';
 
     /**
      * Get auto incrementing id.
@@ -92,8 +92,7 @@ class TicketTableGateway extends TableGateway
         $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
         // Put field conditions string in the query.
-        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
-
+        $query = sprintf(self::COUNT, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
 
         // Prepare condition values.
         $conditionValues = array_values($conditions);

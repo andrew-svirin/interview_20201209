@@ -87,6 +87,18 @@ class TicketFacade
     }
 
     /**
+     * Find models in repository.
+     *
+     * @param array $conditions
+     *
+     * @return Ticket[]|null
+     */
+    public function findMultiple(array $conditions): ?array
+    {
+        return $this->ticketRepository->findMultiple($conditions);
+    }
+
+    /**
      * Count models in repository by airplane.
      *
      * @param int $airplaneId

@@ -2,7 +2,7 @@
 
 namespace AndrewSvirin\Interview\Controllers;
 
-use AndrewSvirin\Interview\Exceptions\ModelNotSavedException;
+use AndrewSvirin\Interview\Builders\ApiResponseBuilder;
 use AndrewSvirin\Interview\Facades\TicketOrderFacade;
 use AndrewSvirin\Interview\Requests\TicketOrder\CreateTicketOrderRequest;
 use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
@@ -20,9 +20,12 @@ class TicketOrderController extends ApiController
      */
     private TicketOrderFacade $ticketOrderFacade;
 
-    public function __construct(ApiRequestValidator $validator, TicketOrderFacade $ticketOrderFacade)
-    {
-        parent::__construct($validator);
+    public function __construct(
+        ApiRequestValidator $validator,
+        ApiResponseBuilder $apiResponseBuilder,
+        TicketOrderFacade $ticketOrderFacade
+    ) {
+        parent::__construct($validator, $apiResponseBuilder);
         $this->ticketOrderFacade = $ticketOrderFacade;
     }
 
@@ -31,8 +34,7 @@ class TicketOrderController extends ApiController
      *
      * @param CreateTicketOrderRequest $request
      *
-     * @return array
-     * @throws ModelNotSavedException
+     * @return ApiResponseBuilder
      */
     public function createAction(CreateTicketOrderRequest $request)
     {
@@ -41,7 +43,7 @@ class TicketOrderController extends ApiController
 
         // Return errors on request violations.
         if (null !== $violations) {
-            return $violations;
+            return $this->response(401)->withErrors($violations);
         }
 
         $requestValues = $request->validated();
@@ -51,12 +53,9 @@ class TicketOrderController extends ApiController
 
         // Save model.
         if (!$this->ticketOrderFacade->save($model, $requestValues['airplane_id'], $requestValues['sits_count'])) {
-            throw new ModelNotSavedException();
+            return $this->response(401)->withMessage('Ticket order not created.');
         }
 
-        return [
-            'message' => 'Ticket order created.',
-            'data' => $model->getValues(),
-        ];
+        return $this->response()->withMessage('Ticket order created.')->withModel($model);
     }
 }

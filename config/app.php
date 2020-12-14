@@ -5,8 +5,10 @@
 use AndrewSvirin\Interview\Adapters\Db\DbAdapterInterface;
 use AndrewSvirin\Interview\Adapters\Db\MySqlAdapter;
 use AndrewSvirin\Interview\App;
+use AndrewSvirin\Interview\Builders\ApiResponseBuilder;
 use AndrewSvirin\Interview\Controllers\AirplaneController;
 use AndrewSvirin\Interview\Controllers\SiteController;
+use AndrewSvirin\Interview\Controllers\TicketController;
 use AndrewSvirin\Interview\Controllers\TicketOrderController;
 use AndrewSvirin\Interview\EventListeners\SaveTicketOrderTickets;
 use AndrewSvirin\Interview\Events\TicketOrderCreated;
@@ -78,6 +80,7 @@ $config = [
         InputStreamFactoryInterface::class => InputStreamFactory::class,
         ApiRequestFactory::class,
         ApiResponseFactory::class,
+        ApiResponseBuilder::class,
         // Validator services.
         Validator::class,
         ApiRequestValidator::class,
@@ -88,6 +91,7 @@ $config = [
         SiteController::class,
         AirplaneController::class,
         TicketOrderController::class,
+        TicketController::class,
         // Gateway services.
         AirplaneTableGateway::class,
         TicketOrderTableGateway::class,
@@ -116,6 +120,9 @@ $config = [
         ],
         'api/ticket-orders' => [
             'POST' => ['TicketOrder', 'create'],
+        ],
+        'api/tickets' => [
+            'GET' => ['Ticket', 'viewList'],
         ],
     ],
 

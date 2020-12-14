@@ -71,11 +71,13 @@ class TicketOrderFacade
      * @param int $ticketsCount
      *
      * @return bool
-     * @throws \AndrewSvirin\Interview\Exceptions\EventNotRegisteredException
      */
     public function save(TicketOrder $model, int $airplaneId, int $ticketsCount): bool
     {
         $result = $this->ticketOrderRepository->save($model);
+        if (false === $result) {
+            return false;
+        }
         $this->eventDispatcher->dispatch(new TicketOrderCreated($model, $airplaneId, $ticketsCount));
 
         return $result;

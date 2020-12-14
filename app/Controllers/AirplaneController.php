@@ -2,7 +2,7 @@
 
 namespace AndrewSvirin\Interview\Controllers;
 
-use AndrewSvirin\Interview\Exceptions\ModelNotSavedException;
+use AndrewSvirin\Interview\Builders\ApiResponseBuilder;
 use AndrewSvirin\Interview\Facades\AirplaneFacade;
 use AndrewSvirin\Interview\Requests\Airplane\CreateAirplaneRequest;
 use AndrewSvirin\Interview\Services\Validator\ApiRequestValidator;
@@ -20,9 +20,12 @@ class AirplaneController extends ApiController
      */
     private AirplaneFacade $airplaneFacade;
 
-    public function __construct(ApiRequestValidator $validator, AirplaneFacade $airplaneFacade)
-    {
-        parent::__construct($validator);
+    public function __construct(
+        ApiRequestValidator $validator,
+        ApiResponseBuilder $apiResponseBuilder,
+        AirplaneFacade $airplaneFacade
+    ) {
+        parent::__construct($validator, $apiResponseBuilder);
         $this->airplaneFacade = $airplaneFacade;
     }
 
@@ -31,8 +34,7 @@ class AirplaneController extends ApiController
      *
      * @param CreateAirplaneRequest $request
      *
-     * @return array
-     * @throws ModelNotSavedException
+     * @return ApiResponseBuilder|array
      */
     public function createAction(CreateAirplaneRequest $request)
     {
@@ -49,12 +51,9 @@ class AirplaneController extends ApiController
 
         // Save model.
         if (!$this->airplaneFacade->save($model)) {
-            throw new ModelNotSavedException();
+            return $this->response(401)->withMessage('Airplane not created.');
         }
 
-        return [
-            'message' => 'Airplane created.',
-            'data' => $model->getValues(),
-        ];
+        return $this->response()->withMessage('Airplane created.')->withModel($model);
     }
 }

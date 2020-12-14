@@ -17,10 +17,11 @@ class Uri implements UriInterface
      */
     private string $path;
 
-    public function __construct(string $path)
-    {
-        $this->path = $path;
-    }
+    /**
+     * URI query.
+     * @var string
+     */
+    private string $query;
 
     /**
      * @inheritDoc
@@ -75,7 +76,7 @@ class Uri implements UriInterface
      */
     public function getQuery()
     {
-        throw new RuntimeException('Not implemented method getQuery().');
+        return $this->query;
     }
 
     /**
@@ -123,7 +124,9 @@ class Uri implements UriInterface
      */
     public function withPath($path)
     {
-        throw new RuntimeException('Not implemented method withPath().');
+        $this->path = $path;
+
+        return $this;
     }
 
     /**
@@ -131,7 +134,9 @@ class Uri implements UriInterface
      */
     public function withQuery($query)
     {
-        throw new RuntimeException('Not implemented method withQuery().');
+        $this->query = $query;
+
+        return $this;
     }
 
     /**
