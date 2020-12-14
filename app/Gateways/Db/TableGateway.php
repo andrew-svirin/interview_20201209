@@ -62,6 +62,44 @@ abstract class TableGateway
     }
 
     /**
+     * Put where conditions fields string in query.
+     *
+     * @param string $query
+     * @param string|null $conditionFieldsString
+     *
+     * @return string|null
+     */
+    protected function putQueryWhere(string $query, string $conditionFieldsString = null): ?string
+    {
+        $result = str_replace(
+            ' :where',
+            $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '',
+            $query
+        );
+
+        return $result;
+    }
+
+    /**
+     * Put having conditions fields string in query.
+     *
+     * @param string $query
+     * @param string|null $conditionFieldsString
+     *
+     * @return string|null
+     */
+    protected function putQueryHaving(string $query, string $conditionFieldsString = null): ?string
+    {
+        $result = str_replace(
+            ' :having',
+            $conditionFieldsString ? ' HAVING ' . $conditionFieldsString : '',
+            $query
+        );
+
+        return $result;
+    }
+
+    /**
      * Get count value.
      *
      * @param array $result

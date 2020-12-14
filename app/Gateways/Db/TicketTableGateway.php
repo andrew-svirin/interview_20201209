@@ -15,9 +15,12 @@ class TicketTableGateway extends TableGateway
     const CREATE = 'INSERT INTO `tickets` ' .
     '(`id`, `ticket_order_id`, `airplane_id`, `row_number`, `sit_number`) VALUES (?, ?, ?, ?, ?);';
 
-    const FIND = 'SELECT * FROM `tickets`%s;';
+    const FIND = 'SELECT * FROM `tickets` :where;';
 
-    const COUNT = 'SELECT COUNT(*) as `COUNT` FROM `tickets`%s;';
+    const COUNT = 'SELECT COUNT(*) as `COUNT` FROM `tickets` :where;';
+
+    const COUNT_BY_AIRPLANE_ROW = 'SELECT `airplane_id`, `row_number`, COUNT(*) as `COUNT` FROM tickets ' .
+    'GROUP BY `airplane_id`, `row_number` :having;';
 
     /**
      * Get auto incrementing id.
@@ -67,7 +70,7 @@ class TicketTableGateway extends TableGateway
         $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
         // Put field conditions string in the query.
-        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+        $query = $this->putQueryWhere(self::FIND, $conditionFieldsString);
 
 
         // Prepare condition values.
@@ -92,7 +95,7 @@ class TicketTableGateway extends TableGateway
         $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
         // Put field conditions string in the query.
-        $query = sprintf(self::COUNT, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+        $query = $this->putQueryWhere(self::COUNT, $conditionFieldsString);
 
         // Prepare condition values.
         $conditionValues = array_values($conditions);
@@ -101,5 +104,29 @@ class TicketTableGateway extends TableGateway
         $result = $this->dbClient->query($query, $conditionValues);
 
         return $this->getCountValue($result);
+    }
+
+    /**
+     * Get tickets in row by airplane.
+     *
+     * @param array $conditions
+     *
+     * @return array|false|mixed|null
+     */
+    public function countByRowAndAirplaneId(array $conditions)
+    {
+        // Apply condition fields in query.
+        $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
+
+        // Put field conditions string in the query.
+        $query = $this->putQueryHaving(self::COUNT_BY_AIRPLANE_ROW, $conditionFieldsString);
+
+        // Prepare condition values.
+        $conditionValues = array_values($conditions);
+
+        // Do query.
+        $result = $this->dbClient->query($query, $conditionValues);
+
+        return $result;
     }
 }
