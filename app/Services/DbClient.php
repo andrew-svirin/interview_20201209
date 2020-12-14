@@ -44,14 +44,6 @@ class DbClient
     }
 
     /**
-     * Close db connection on destruction.
-     */
-    public function __destruct()
-    {
-        $this->close();
-    }
-
-    /**
      * Open connection to database.
      */
     public function connect(): void

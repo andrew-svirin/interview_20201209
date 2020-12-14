@@ -15,7 +15,7 @@ class AirplaneTableGateway extends TableGateway
     const CREATE = 'INSERT INTO `airplanes` ' .
     '(`id`, `aircraft_type`, `sits_count`, `rows`, `row_arrangement`) VALUES (?, ?, ?, ?, ?);';
 
-    const FIND = '';
+    const FIND = 'SELECT * FROM `airplanes`%s;';
 
     /**
      * Get auto incrementing id.
@@ -24,9 +24,7 @@ class AirplaneTableGateway extends TableGateway
     {
         $result = $this->dbClient->query(self::AUTO_INCREMENT);
 
-        $id = (int)$result[0]['AUTO_INCREMENT'];
-
-        return $id;
+        return $this->getAutoIncrementValue($result);
     }
 
     /**
@@ -57,13 +55,25 @@ class AirplaneTableGateway extends TableGateway
     /**
      * Find multiple rows by conditions.
      *
-     * @param array $conditions
+     * @param array|null $conditions
      *
      * @return array|null
      */
-    public function findMultiple(array $conditions): ?array
+    public function findMultiple(array $conditions = null): ?array
     {
+        // Apply condition fields in query.
+        $conditionFieldsString = $this->prepareQueryConditionFieldsString(array_keys($conditions));
 
-        return [];
+        // Put field conditions string in the query.
+        $query = sprintf(self::FIND, $conditionFieldsString ? ' WHERE ' . $conditionFieldsString : '');
+
+
+        // Prepare condition values.
+        $conditionValues = array_values($conditions);
+
+        // Do query.
+        $rows = $this->dbClient->query($query, $conditionValues);
+
+        return $rows;
     }
 }

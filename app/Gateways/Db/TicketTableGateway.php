@@ -24,9 +24,7 @@ class TicketTableGateway extends TableGateway
     {
         $result = $this->dbClient->query(self::AUTO_INCREMENT);
 
-        $id = (int)$result[0]['AUTO_INCREMENT'];
-
-        return $id;
+        return $this->getAutoIncrementValue($result);
     }
 
     /**

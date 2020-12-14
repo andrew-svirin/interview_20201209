@@ -74,11 +74,11 @@ class AirplaneRepository
     /**
      * Find airplane models by conditions.
      *
-     * @param array $conditions
+     * @param array|null $conditions
      *
      * @return Airplane[]|null
      */
-    public function findMultiple(array $conditions): ?array
+    public function findMultiple(array $conditions = null): ?array
     {
         $rows = $this->airplaneTableGateway->findMultiple($conditions);
 

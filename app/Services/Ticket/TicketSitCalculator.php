@@ -16,10 +16,12 @@ class TicketSitCalculator
      * @param Airplane $airplane
      * @param int $amount
      *
-     * @return array
+     * @return array = [
+     *     ['<row_number>', '<sit_number>']
+     * ]
      */
     public function calculate(Airplane $airplane, int $amount): array
     {
-        return [];
+        return [['A', 1]];
     }
 }
